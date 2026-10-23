@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PRO MIMAROPA RICTMD - Live QR & Barcode Scanner</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0b1120; color: #f8fafc;
+      min-height: 100vh; padding: 16px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .header {
+      width: 100%; max-width: 520px; text-align: center; margin-bottom: 12px;
+      border-bottom: 1px solid #1e293b; padding-bottom: 12px;
+    }
+    .brand-title {
+      font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px;
+      color: #38bdf8; text-transform: uppercase;
+    }
+    .brand-sub {
+      font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase;
+    }
+    .instructions {
+      font-size: 0.85rem; color: #cbd5e1; margin-top: 6px;
+    }
+    .notice-box {
+      width: 100%; max-width: 480px; background: #451a03; border: 1px solid #f59e0b;
+      color: #fef3c7; padding: 10px 14px; border-radius: 10px; margin-bottom: 12px;
+      font-size: 0.8rem; text-align: center; line-height: 1.4; display: none;
+    }
+    .notice-box a { color: #38bdf8; font-weight: 700; text-decoration: underline; }
+    #reader-container {
+      width: 100%; max-width: 480px; position: relative;
+      border-radius: 16px; overflow: hidden; background: #000;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      border: 2px solid #334155;
+    }
+    #reader {
+      width: 100%;
+    }
+    .scan-reticle {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 220px; height: 220px; pointer-events: none;
+      border: 2px solid rgba(56, 189, 248, 0.5); border-radius: 12px;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+    }
+    .scan-reticle::before, .scan-reticle::after {
+      content: ''; position: absolute; width: 24px; height: 24px;
+      border-color: #38bdf8; border-style: solid;
+    }
+    .scan-reticle::before { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-top-left-radius: 10px; }
+    .scan-reticle::after { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-bottom-right-radius: 10px; }
+    
+    .scan-laser {
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: #38bdf8; box-shadow: 0 0 12px #38bdf8;
+      animation: laserScan 2s infinite ease-in-out;
+    }
+    @keyframes laserScan {
+      0%, 100% { top: 10%; opacity: 0.2; }
+      50% { top: 90%; opacity: 1; }
+    }
+
+    .result-box {
+      width: 100%; max-width: 480px; margin-top: 14px;
+      background: #1e293b; border-radius: 12px; padding: 14px;
+      text-align: center; border: 1px solid #38bdf8; display: none;
+      animation: popIn 0.2s ease-out;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .result-label { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
+    .result-code { font-size: 1.3rem; font-weight: 800; color: #38bdf8; margin: 4px 0; font-family: monospace; }
+    .result-status { font-size: 0.85rem; font-weight: 600; color: #4ade80; }
+
+    .action-btns {
+      width: 100%; max-width: 480px; display: flex; gap: 8px; margin-top: 12px;
+    }
+    .btn {
+      flex: 1; padding: 10px 14px; border: none; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-return { background: #0284c7; color: white; }
+    .btn-return:hover { background: #0369a1; }
+    .btn-switch { background: #334155; color: #f1f5f9; }
+    .btn-switch:hover { background: #475569; }
+
+    .history-card {
+      width: 100%; max-width: 480px; margin-top: 16px;
+      background: #111827; border: 1px solid #1f2937; border-radius: 12px;
+      padding: 12px; display: none;
+    }
+    .history-head { font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
+    .history-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 6px 8px; border-bottom: 1px solid #1f2937; font-size: 0.8rem;
+    }
+    .history-item:last-child { border-bottom: none; }
+    .history-code { font-family: monospace; font-weight: 700; color: #38bdf8; }
+    .history-time { font-size: 0.7rem; color: #64748b; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="brand-title">RICTMD PRO MIMAROPA</div>
+    <div class="brand-sub">IT Asset Management - Real-time Camera Scanner</div>
+    <div class="instructions">Point camera at QR code property sticker - scans automatically</div>
+  </div>
+
+  <div id="fileNoticeBox" class="notice-box">
+    <strong>Local File Notice:</strong> Web browsers disable camera access on <code>file:///</code> links for security.<br>
+    Deploy this file to <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> or Netlify to get a free secure <code>https://</code> URL where the camera works instantly!
+  </div>
+
+  <div id="reader-container">
+    <div id="reader"></div>
+    <div class="scan-reticle">
+      <div class="scan-laser"></div>
+    </div>
+  </div>
+
+  <div class="result-box" id="resultBox">
+    <div class="result-label">Scanned Asset Tag</div>
+    <div class="result-code" id="resultCode">--</div>
+    <div class="result-status" id="resultStatus">Processing...</div>
+  </div>
+
+  <div class="action-btns">
+    <button class="btn btn-switch" id="btnSwitchCamera" onclick="switchCamera()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/><path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/></svg>
+      Flip Camera
+    </button>
+    <button class="btn btn-return" id="btnReturnDashboard" onclick="returnToDashboard()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>
+      Back to Dashboard
+    </button>
+  </div>
+
+  <div class="history-card" id="historyCard">
+    <div class="history-head">Recent Scans (This Session)</div>
+    <div id="historyList"></div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnUrl = urlParams.get('returnUrl') || '';
+
+    // Check if running from local file
+    if (window.location.protocol === 'file:') {
+      var nBox = document.getElementById('fileNoticeBox');
+      if (nBox) nBox.style.display = 'block';
+    }
+
+    var html5QrCode = null;
+    var currentCameraIndex = 0;
+    var availableCameras = [];
+    var lastScannedCode = '';
+    var lastScannedTime = 0;
+    var sessionHistory = [];
+
+    // Web Audio API beep
+    var audioCtx = null;
+    function playBeep() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(1400, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.start(audioCtx.currentTime);
+        osc.stop(audioCtx.currentTime + 0.15);
+      } catch(e) {}
+    }
+
+    function initLiveScanner() {
+      if (typeof Html5Qrcode === 'undefined') {
+        setTimeout(initLiveScanner, 150);
+        return;
+      }
+
+      html5QrCode = new Html5Qrcode('reader');
+
+      Html5Qrcode.getCameras().then(function(cameras) {
+        if (cameras && cameras.length) {
+          availableCameras = cameras;
+          currentCameraIndex = cameras.length - 1;
+          startScannerWithCamera(availableCameras[currentCameraIndex].id);
+        } else {
+          startScannerWithFacingMode({ facingMode: 'environment' });
+        }
+      }).catch(function(err) {
+        startScannerWithFacingMode({ facingMode: 'environment' });
+      });
+    }
+
+    function startScannerWithCamera(cameraId) {
+      if (!html5QrCode) return;
+      var config = { fps: 15, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
+      html5QrCode.start(cameraId, config, onScanSuccess, function(err) {})
+        .catch(function(err) {
+          console.error('Camera start error:', err);
+          document.getElementById('resultBox').style.display = 'block';
+          document.getElementById('resultCode').textContent = 'Camera Blocked';
+          document.getElementById('resultStatus').textContent = 'Please tap Allow when prompted for camera access, or deploy to Netlify HTTPS.';
+          document.getElementById('resultStatus').style.color = '#f87171';
+        });
+    }
+
+    function startScannerWithFacingMode(facingMode) {
+      var config = { fps: 15, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
+      html5QrCode.start(facingMode, config, onScanSuccess, function(err) {})
+        .catch(function(err) {
+          console.error('FacingMode start error:', err);
+        });
+    }
+
+    function switchCamera() {
+      if (!availableCameras || availableCameras.length < 2) return;
+      currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
+      if (html5QrCode && html5QrCode.isScanning) {
+        html5QrCode.stop().then(function() {
+          startScannerWithCamera(availableCameras[currentCameraIndex].id);
+        });
+      }
+    }
+
+    // Real-time scan success callback (pure lookup, NO sheet logging)
+    function onScanSuccess(decodedText) {
+      if (!decodedText || !decodedText.trim()) return;
+      var code = decodedText.trim();
+      var now = Date.now();
+
+      // Debounce 2.5s for same barcode
+      if (code === lastScannedCode && (now - lastScannedTime) < 2500) return;
+      lastScannedCode = code;
+      lastScannedTime = now;
+
+      playBeep();
+
+      // Clean prefix if any
+      var cleanCode = code.replace(/^HOSTNAME:\s*/i, '').replace(/^PROP:\s*/i, '').trim();
+
+      document.getElementById('resultBox').style.display = 'block';
+      document.getElementById('resultCode').textContent = cleanCode;
+      document.getElementById('resultStatus').textContent = 'Asset matched! Loading details in Dashboard...';
+
+      // Log in local session list
+      sessionHistory.unshift({ code: cleanCode, time: new Date().toLocaleTimeString() });
+      updateHistoryUi();
+
+      // Scenario A: Opened from Dashboard via window.open
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode }, '*');
+        setTimeout(function() {
+          window.close();
+        }, 700);
+        return;
+      }
+
+      // Scenario B: Opened standalone with returnUrl
+      if (returnUrl) {
+        setTimeout(function() {
+          var sep = returnUrl.indexOf('?') > -1 ? '&' : '?';
+          window.location.href = returnUrl + sep + 'scan=' + encodeURIComponent(cleanCode);
+        }, 600);
+      }
+    }
+
+    function updateHistoryUi() {
+      var card = document.getElementById('historyCard');
+      var list = document.getElementById('historyList');
+      if (!sessionHistory.length) return;
+      card.style.display = 'block';
+      list.innerHTML = sessionHistory.slice(0, 10).map(function(item) {
+        return '<div class="history-item">' +
+          '<span class="history-code">' + item.code + '</span>' +
+          '<span class="history-time">' + item.time + '</span>' +
+        '</div>';
+      }).join('');
+    }
+
+    function returnToDashboard() {
+      if (window.opener && !window.opener.closed) {
+        window.close();
+      } else if (returnUrl) {
+        window.location.href = returnUrl;
+      } else {
+        history.back();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', initLiveScanner);
+  </script>
+</body>
+</html>
