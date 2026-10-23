@@ -208,9 +208,34 @@
 
       Html5Qrcode.getCameras().then(function(cameras) {
         if (cameras && cameras.length) {
-          availableCameras = cameras;
-          // If on laptop (only 1 webcam), pick 0. If multiple (phone), pick back camera (last).
-          currentCameraIndex = cameras.length > 1 ? (cameras.length - 1) : 0;
+          // Filter out printer flatbed scanners (e.g. Brother, Canon, Epson)
+          var filtered = cameras.filter(function(c) {
+            var lbl = (c.label || '').toLowerCase();
+            return lbl.indexOf('brother') === -1 && 
+                   lbl.indexOf('printer') === -1 && 
+                   lbl.indexOf('dcp-') === -1 && 
+                   lbl.indexOf('epson') === -1 && 
+                   lbl.indexOf('canon') === -1;
+          });
+          availableCameras = filtered.length > 0 ? filtered : cameras;
+
+          // Smart camera index selection:
+          // 1. If mobile device with back camera, choose back/environment camera
+          // 2. Otherwise prefer "Integrated Camera" or first real webcam
+          var chosenIndex = 0;
+          for (var i = 0; i < availableCameras.length; i++) {
+            var l = (availableCameras[i].label || '').toLowerCase();
+            if (l.indexOf('back') > -1 || l.indexOf('rear') > -1 || l.indexOf('environment') > -1) {
+              chosenIndex = i;
+              break;
+            }
+            if (l.indexOf('integrated') > -1 || l.indexOf('webcam') > -1 || l.indexOf('front') > -1) {
+              chosenIndex = i;
+            }
+          }
+
+          currentCameraIndex = chosenIndex;
+          console.log("Selected camera:", availableCameras[currentCameraIndex]);
           startScannerWithCamera(availableCameras[currentCameraIndex].id);
         } else {
           startScannerFallback();
