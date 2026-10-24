@@ -695,13 +695,14 @@
       });
 
       setTimeout(function() {
-        var qrImg = qrContainer.querySelector('img');
         var qrCanvas = qrContainer.querySelector('canvas');
+        var qrImg = qrContainer.querySelector('img');
         var qrDataUrl = '';
-        if (qrImg && qrImg.src) {
-          qrDataUrl = qrImg.src;
-        } else if (qrCanvas) {
+        if (qrCanvas) {
           try { qrDataUrl = qrCanvas.toDataURL('image/png'); } catch(e) {}
+        }
+        if (!qrDataUrl && qrImg && qrImg.src) {
+          qrDataUrl = qrImg.src;
         }
 
         var printWin = window.open('', '_blank', 'width=850,height=900,menubar=no,toolbar=no,status=no,titlebar=no');
@@ -718,30 +719,23 @@
           '<meta charset="utf-8">' +
           '<title>Asset Tag - ' + escapeHtml(host) + '</title>' +
           '<style>' +
-          '@page { size: auto; margin: 4mm; }' +
-          '* { margin: 0; padding: 0; box-sizing: border-box; }' +
-          'body { background: #ffffff !important; color: #000000 !important; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 4mm; display: flex; justify-content: center; }' +
-          '.asset-sticker-card { ' +
-          '  width: 50mm !important; height: 50mm !important; ' +
-          '  border: 1.2pt solid #000000 !important; border-radius: 4px !important; ' +
-          '  background: #ffffff !important; padding: 1.8mm 2.2mm 2.2mm 2.2mm !important; ' +
-          '  display: flex !important; flex-direction: column !important; justify-content: space-between !important; ' +
-          '  align-items: center !important; ' +
-          '  page-break-inside: avoid !important; break-inside: avoid !important; ' +
-          '  -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; ' +
-          '}' +
-          '.sticker-brand { width: 100% !important; text-align: center !important; border-bottom: 0.8pt solid #000000 !important; padding-bottom: 0.8mm !important; line-height: 1.1 !important; }' +
-          '.sticker-brand-title { font-size: 7.2pt !important; font-weight: 900 !important; letter-spacing: 0.3px !important; text-transform: uppercase !important; }' +
-          '.sticker-brand-sub { font-size: 5.4pt !important; font-weight: 700 !important; color: #222222 !important; text-transform: uppercase !important; }' +
-          '.sticker-qr-box { width: 28mm !important; height: 28mm !important; margin: 0.8mm auto !important; position: relative !important; display: flex !important; align-items: center !important; justify-content: center !important; }' +
-          '.sticker-qr-box img:not(.qr-center-logo) { width: 100% !important; height: 100% !important; display: block !important; }' +
-          '.qr-center-logo { position: absolute !important; width: 26% !important; height: 26% !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; border-radius: 50% !important; background: #ffffff !important; padding: 1px !important; z-index: 10 !important; }' +
-          '.sticker-info-box { width: 100% !important; line-height: 1.25 !important; font-size: 5.8pt !important; text-align: left !important; }' +
-          '.sticker-line { display: flex !important; justify-content: space-between !important; align-items: baseline !important; margin-bottom: 0.3mm !important; overflow: hidden !important; }' +
-          '.sticker-label { font-weight: 700 !important; color: #222222 !important; flex-shrink: 0 !important; }' +
-          '.sticker-val-prop { font-weight: 800 !important; font-family: monospace, sans-serif !important; color: #000000 !important; word-break: break-all !important; font-size: 5.4pt !important; }' +
-          '.sticker-val-host { font-weight: 800 !important; color: #000000 !important; word-break: break-all !important; }' +
-          '.sticker-val-status { font-weight: 800 !important; color: #166534 !important; font-size: 5pt !important; text-transform: uppercase !important; }' +
+        '@page { size: auto; margin: 5mm; }' +
+        '* { margin: 0; padding: 0; box-sizing: border-box !important; }' +
+        'body { background: #ffffff !important; color: #000000 !important; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Arial, sans-serif; padding: 4mm; }' +
+        '.sticker-container { display: flex !important; flex-wrap: wrap !important; gap: 4mm !important; align-items: flex-start !important; justify-content: flex-start !important; }' +
+        '.asset-sticker-card { width: 50mm !important; height: 50mm !important; max-width: 50mm !important; max-height: 50mm !important; border: 1.2pt solid #000000 !important; border-radius: 4px !important; background: #ffffff !important; padding: 1.5mm 2mm 1.5mm 2mm !important; display: flex !important; flex-direction: column !important; justify-content: space-between !important; align-items: center !important; page-break-inside: avoid !important; break-inside: avoid !important; overflow: hidden !important; box-sizing: border-box !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }' +
+        '.sticker-brand { width: 100% !important; text-align: center !important; border-bottom: 0.8pt solid #000000 !important; padding-bottom: 0.8mm !important; line-height: 1.1 !important; }' +
+        '.sticker-brand-title { font-size: 6.8pt !important; font-weight: 900 !important; letter-spacing: 0.3px !important; text-transform: uppercase !important; white-space: nowrap !important; }' +
+        '.sticker-brand-sub { font-size: 5.2pt !important; font-weight: 700 !important; color: #222222 !important; text-transform: uppercase !important; white-space: nowrap !important; }' +
+        '.sticker-qr-box { width: 27mm !important; height: 27mm !important; max-width: 27mm !important; max-height: 27mm !important; margin: 0.5mm auto !important; position: relative !important; display: flex !important; align-items: center !important; justify-content: center !important; overflow: hidden !important; background: #ffffff !important; flex-shrink: 0 !important; }' +
+        '.qr-code-img { width: 27mm !important; height: 27mm !important; max-width: 100% !important; max-height: 100% !important; display: block !important; object-fit: contain !important; aspect-ratio: 1 / 1 !important; }' +
+        '.qr-center-logo { position: absolute !important; width: 7mm !important; height: 7mm !important; top: 50% !important; left: 50% !important; transform: translate(-50%, -50%) !important; border-radius: 50% !important; background: #ffffff !important; padding: 0.8px !important; box-shadow: 0 0 2px rgba(0, 0, 0, 0.4) !important; z-index: 10 !important; }' +
+        '.sticker-info-box { width: 100% !important; line-height: 1.2 !important; font-size: 5.6pt !important; text-align: left !important; }' +
+        '.sticker-line { display: flex !important; justify-content: space-between !important; align-items: baseline !important; margin-bottom: 0.2mm !important; overflow: hidden !important; white-space: nowrap !important; }' +
+        '.sticker-label { font-weight: 700 !important; color: #222222 !important; flex-shrink: 0 !important; }' +
+        '.sticker-val-prop { font-weight: 800 !important; font-family: monospace, sans-serif !important; color: #000000 !important; overflow: hidden !important; text-overflow: ellipsis !important; max-width: 32mm !important; font-size: 5.4pt !important; }' +
+        '.sticker-val-host { font-weight: 800 !important; color: #000000 !important; overflow: hidden !important; text-overflow: ellipsis !important; max-width: 32mm !important; font-size: 5.6pt !important; }' +
+        '.sticker-val-status { font-weight: 800 !important; color: #166534 !important; font-size: 4.8pt !important; text-transform: uppercase !important; }' +
           '</style>' +
           '</head>' +
           '<body>' +
@@ -751,8 +745,8 @@
           '    <div class="sticker-brand-sub">IT ASSET MANAGEMENT</div>' +
           '  </div>' +
           '  <div class="sticker-qr-box">' +
-          '    <img src="' + qrDataUrl + '" alt="QR Code" />' +
-          '    <img class="qr-center-logo" src="' + PRO_MIMAROPA_SEAL_B64 + '" alt="Seal" />' +
+          '    <img src="' + qrDataUrl + '" class="qr-code-img" alt="QR Code" />' +
+          '    <img src="' + PRO_MIMAROPA_SEAL_B64 + '" class="qr-center-logo" alt="Seal" />' +
           '  </div>' +
           '  <div class="sticker-info-box">' +
           '    <div class="sticker-line"><span class="sticker-label">Property No.:</span> <span class="sticker-val-prop">' + escapeHtml(prop) + '</span></div>' +
