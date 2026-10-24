@@ -361,7 +361,6 @@
 
       // Clean prefix if barcode was printed with "HOSTNAME:" or "PROP:"
       var cleanCode = rawCode.replace(/^HOSTNAME:\s*/i, '').replace(/^PROP:\s*/i, '').trim();
-
       lastScannedCode = cleanCode;
 
       // 1. Play audio confirmation
@@ -373,37 +372,38 @@
         html5QrCode.stop().catch(function(e) { console.warn('Camera stop:', e); });
       }
 
-      // 3. Update Result Card UI
+      // 3. Keep UI open - DO NOT AUTO CLOSE
       document.getElementById('reader-container').style.display = 'none';
       document.getElementById('actionControls').style.display = 'none';
 
       var resultBox = document.getElementById('resultBox');
       resultBox.style.display = 'block';
       document.getElementById('resultCode').textContent = cleanCode;
+      document.getElementById('resultStatus').textContent = 'Asset Tag identified. Click below to view complete inventory record in Dashboard:';
 
-      // Prepare target inventory dashboard URL with scan query parameter
+      // Notify parent window / opener if active
+      try {
+        if (window.opener && !window.opener.closed) {
+          window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode, code: cleanCode }, '*');
+        }
+      } catch(e) {}
+
+      // Target direct inventory link with ?scan= parameter
       var targetUrl = returnUrl;
       var sep = targetUrl.indexOf('?') > -1 ? '&' : '?';
       var directInventoryLink = targetUrl + sep + 'scan=' + encodeURIComponent(cleanCode);
 
       var btnOpen = document.getElementById('btnOpenInventory');
       btnOpen.href = directInventoryLink;
-
-      // Scenario A: Opened from Dashboard in popup or iframe (window.opener active)
-      if (window.opener && !window.opener.closed) {
-        document.getElementById('resultStatus').textContent = 'Asset tag matched. Transferring to Inventory Dashboard...';
-        window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode, code: cleanCode }, '*');
-        setTimeout(function() {
-          window.close();
-        }, 600);
-        return;
-      }
-
-      // Scenario B: Standalone mode (Redirect directly to Apps Script Dashboard)
-      document.getElementById('resultStatus').textContent = 'Asset tag verified. Redirecting to Inventory Dashboard in 2 seconds...';
-      setTimeout(function() {
-        window.location.href = directInventoryLink;
-      }, 1800);
+      btnOpen.onclick = function(e) {
+        if (window.opener && !window.opener.closed) {
+          try {
+            window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode, code: cleanCode }, '*');
+            window.opener.focus();
+          } catch(err) {}
+        }
+        return true;
+      };
     }
 
     function resetScannerForNextAsset() {
