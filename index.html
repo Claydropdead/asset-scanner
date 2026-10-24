@@ -3,41 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PRO MIMAROPA RICTMD - Live QR & Barcode Scanner</title>
+  <title>PRO MIMAROPA RICTMD - IT Asset Barcode Scanner</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #0b1120; color: #f8fafc;
+      background: #0f172a; color: #f8fafc;
       min-height: 100vh; padding: 16px;
       display: flex; flex-direction: column; align-items: center;
     }
     .header {
-      width: 100%; max-width: 520px; text-align: center; margin-bottom: 12px;
+      width: 100%; max-width: 480px; text-align: center; margin-bottom: 14px;
       border-bottom: 1px solid #1e293b; padding-bottom: 12px;
     }
+    .brand-sup {
+      font-size: 0.72rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+    }
     .brand-title {
-      font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px;
-      color: #38bdf8; text-transform: uppercase;
+      font-size: 1.15rem; font-weight: 800; letter-spacing: 0.5px;
+      color: #38bdf8; text-transform: uppercase; margin: 2px 0;
     }
     .brand-sub {
-      font-size: 0.75rem; color: #94a3b8; font-weight: 600; text-transform: uppercase;
+      font-size: 0.75rem; color: #cbd5e1; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
     }
     .instructions {
-      font-size: 0.85rem; color: #cbd5e1; margin-top: 6px;
+      font-size: 0.8rem; color: #94a3b8; margin-top: 6px;
     }
-    .notice-box {
-      width: 100%; max-width: 480px; background: #451a03; border: 1px solid #f59e0b;
-      color: #fef3c7; padding: 10px 14px; border-radius: 10px; margin-bottom: 12px;
-      font-size: 0.8rem; text-align: center; line-height: 1.4; display: none;
-    }
-    .notice-box a { color: #38bdf8; font-weight: 700; text-decoration: underline; }
+
     #reader-container {
       width: 100%; max-width: 480px; position: relative; min-height: 280px;
-      border-radius: 16px; overflow: hidden; background: #000;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
-      border: 2px solid #334155; display: flex; align-items: center; justify-content: center;
+      border-radius: 14px; overflow: hidden; background: #020617;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
+      border: 1.5px solid #334155;
+      display: flex; align-items: center; justify-content: center;
     }
     #reader {
       width: 100%;
@@ -46,7 +45,7 @@
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       width: 220px; height: 220px; pointer-events: none;
       border: 2px solid rgba(56, 189, 248, 0.5); border-radius: 12px;
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
     }
     .scan-reticle::before, .scan-reticle::after {
       content: ''; position: absolute; width: 24px; height: 24px;
@@ -61,65 +60,72 @@
       animation: laserScan 2s infinite ease-in-out;
     }
     @keyframes laserScan {
-      0%, 100% { top: 10%; opacity: 0.2; }
-      50% { top: 90%; opacity: 1; }
+      0%, 100% { top: 12%; opacity: 0.2; }
+      50% { top: 88%; opacity: 1; }
     }
 
+    .notice-card {
+      padding: 24px 20px; text-align: center; color: #f8fafc; z-index: 10;
+    }
+    .notice-title {
+      font-weight: 800; color: #f87171; font-size: 1.05rem; margin-bottom: 8px; text-transform: uppercase;
+    }
+    .notice-desc {
+      font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; max-width: 340px; margin-left: auto; margin-right: auto;
+    }
+    .notice-error {
+      font-family: monospace; font-size: 0.72rem; color: #fca5a5; margin-top: 10px; word-break: break-all;
+    }
+
+    /* Scan Result Card */
     .result-box {
       width: 100%; max-width: 480px; margin-top: 14px;
-      background: #1e293b; border-radius: 12px; padding: 14px;
-      text-align: center; border: 1px solid #38bdf8; display: none;
-      animation: popIn 0.2s ease-out;
+      background: #1e293b; border-radius: 12px; padding: 16px;
+      text-align: center; border: 1.5px solid #0284c7; display: none;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    @keyframes popIn {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .result-badge {
+      display: inline-block; font-size: 0.72rem; text-transform: uppercase;
+      font-weight: 700; color: #38bdf8; letter-spacing: 0.6px;
+      background: rgba(56, 189, 248, 0.1); padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
     }
-    .result-label { font-size: 0.75rem; text-transform: uppercase; color: #94a3b8; font-weight: 700; }
-    .result-code { font-size: 1.3rem; font-weight: 800; color: #38bdf8; margin: 4px 0; font-family: monospace; }
-    .result-status { font-size: 0.85rem; font-weight: 600; color: #4ade80; }
+    .result-code {
+      font-size: 1.35rem; font-weight: 800; color: #ffffff;
+      margin-bottom: 6px; font-family: monospace; letter-spacing: 0.5px;
+    }
+    .result-status {
+      font-size: 0.84rem; font-weight: 600; color: #4ade80; margin-bottom: 12px;
+    }
 
     .action-btns {
       width: 100%; max-width: 480px; display: flex; gap: 8px; margin-top: 12px;
     }
     .btn {
-      flex: 1; padding: 10px 14px; border: none; border-radius: 8px;
-      font-size: 0.85rem; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: background 0.2s, transform 0.1s;
+      flex: 1; padding: 11px 16px; border: none; border-radius: 8px;
+      font-size: 0.84rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.2s, transform 0.1s; text-decoration: none;
     }
     .btn:active { transform: scale(0.98); }
-    .btn-return { background: #0284c7; color: white; }
-    .btn-return:hover { background: #0369a1; }
-    .btn-switch { background: #334155; color: #f1f5f9; }
-    .btn-switch:hover { background: #475569; }
+    .btn-primary { background: #0284c7; color: #ffffff; }
+    .btn-primary:hover { background: #0369a1; }
+    .btn-success { background: #16a34a; color: #ffffff; }
+    .btn-success:hover { background: #15803d; }
+    .btn-secondary { background: #334155; color: #f1f5f9; }
+    .btn-secondary:hover { background: #475569; }
 
-    .history-card {
-      width: 100%; max-width: 480px; margin-top: 16px;
-      background: #111827; border: 1px solid #1f2937; border-radius: 12px;
-      padding: 12px; display: none;
+    .footer-note {
+      margin-top: 20px; font-size: 0.72rem; color: #64748b; text-align: center;
     }
-    .history-head { font-size: 0.75rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; }
-    .history-item {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 6px 8px; border-bottom: 1px solid #1f2937; font-size: 0.8rem;
-    }
-    .history-item:last-child { border-bottom: none; }
-    .history-code { font-family: monospace; font-weight: 700; color: #38bdf8; }
-    .history-time { font-size: 0.7rem; color: #64748b; }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <div class="brand-title">RICTMD PRO MIMAROPA</div>
-    <div class="brand-sub">IT Asset Management - Real-time Camera Scanner</div>
-    <div class="instructions">Point camera at QR code property sticker - scans automatically</div>
-  </div>
-
-  <div id="fileNoticeBox" class="notice-box">
-    <strong>Local File Notice:</strong> Web browsers disable camera access on <code>file:///</code> links for security.<br>
-    Deploy this file to <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> or Netlify to get a free secure <code>https://</code> URL where the camera works instantly!
+    <div class="brand-sup">PHILIPPINE NATIONAL POLICE &bull; PRO MIMAROPA</div>
+    <div class="brand-title">RICTMD IT Asset Tracker</div>
+    <div class="brand-sub">Official Barcode & QR Verification System</div>
+    <div class="instructions" id="headerInstruction">Align camera with Property Sticker or Barcode</div>
   </div>
 
   <div id="reader-container">
@@ -127,59 +133,67 @@
     <div class="scan-reticle" id="scanReticle">
       <div class="scan-laser"></div>
     </div>
-    <div id="cameraBlockedNotice" style="display:none; padding: 24px 16px; text-align: center; color: #f8fafc; z-index: 10;">
-      <div style="font-size: 2.5rem; margin-bottom: 8px;">📷❌</div>
-      <div style="font-weight: 800; color: #f87171; font-size: 1.05rem; margin-bottom: 8px;">Camera Access Blocked</div>
-      <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; max-width: 320px; margin-left: auto; margin-right: auto;">
-        Naka-block ang camera sa browser.<br>
-        I-click ang <strong>Camera icon (📷❌)</strong> sa kanang bahin ng address bar sa itaas, piliin ang <strong>"Always allow"</strong>, pagkatapos ay i-reload.
+
+    <!-- Camera Access Notice (Shown only if blocked or needs activation) -->
+    <div id="cameraBlockedNotice" class="notice-card" style="display:none;">
+      <div class="notice-title">Camera Access Required</div>
+      <div class="notice-desc" id="noticeDesc">
+        Please grant camera permissions to verify asset property tags. If prompted, select "Allow".
       </div>
-      <button class="btn btn-return" onclick="location.reload()" style="padding: 8px 18px; margin: 0 auto; display: inline-flex;">
-        🔄 Reload Page
+      <div style="display:flex; flex-direction:column; gap:8px; max-width:280px; margin:0 auto;">
+        <button class="btn btn-primary" onclick="requestCameraAccess()" type="button">
+          Enable Camera Access
+        </button>
+        <button class="btn btn-secondary" onclick="location.reload()" type="button">
+          Refresh Page
+        </button>
+      </div>
+      <div id="technicalError" class="notice-error"></div>
+    </div>
+  </div>
+
+  <!-- Scan Result Container (One scan at a time) -->
+  <div class="result-box" id="resultBox">
+    <div class="result-badge">Verified Asset Tag</div>
+    <div class="result-code" id="resultCode">--</div>
+    <div class="result-status" id="resultStatus">Loading asset details from Inventory...</div>
+    <div style="display:flex; gap:8px;">
+      <a class="btn btn-success" id="btnOpenInventory" href="#" target="_blank" style="flex:2;">
+        View Asset Record
+      </a>
+      <button class="btn btn-secondary" onclick="resetScannerForNextAsset()" type="button" style="flex:1;">
+        Scan Next
       </button>
     </div>
   </div>
 
-  <div class="result-box" id="resultBox">
-    <div class="result-label">Scanned Asset Tag</div>
-    <div class="result-code" id="resultCode">--</div>
-    <div class="result-status" id="resultStatus">Processing...</div>
-  </div>
-
-  <div class="action-btns">
-    <button class="btn btn-switch" id="btnSwitchCamera" onclick="switchCamera()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/><path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/></svg>
+  <div class="action-btns" id="actionControls">
+    <button class="btn btn-secondary" id="btnSwitchCamera" onclick="switchCamera()" type="button">
       Flip Camera
     </button>
-    <button class="btn btn-return" id="btnReturnDashboard" onclick="returnToDashboard()">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/></svg>
+    <button class="btn btn-primary" id="btnReturnDashboard" onclick="returnToDashboard()" type="button">
       Back to Dashboard
     </button>
   </div>
 
-  <div class="history-card" id="historyCard">
-    <div class="history-head">Recent Scans (This Session)</div>
-    <div id="historyList"></div>
+  <div class="footer-note">
+    Police Regional Office MIMAROPA &bull; Regional Information and Communications Technology Management Division
   </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const returnUrl = urlParams.get('returnUrl') || '';
+    // Configuration: Google Apps Script Inventory Dashboard URL
+    const DEFAULT_DASHBOARD_URL = 'https://script.google.com/macros/s/AKfycbzLv0ZHoSfgapGAf0NdwoCLmHpiqIPiKkdcX9rMe2U/dev';
 
-    // Check if running from local file
-    if (window.location.protocol === 'file:') {
-      var nBox = document.getElementById('fileNoticeBox');
-      if (nBox) nBox.style.display = 'block';
-    }
+    const urlParams = new URLSearchParams(window.location.search);
+    const returnUrl = urlParams.get('returnUrl') || urlParams.get('dashboardUrl') || DEFAULT_DASHBOARD_URL;
 
     var html5QrCode = null;
     var currentCameraIndex = 0;
     var availableCameras = [];
+    var isScanningActive = false;
     var lastScannedCode = '';
-    var lastScannedTime = 0;
-    var sessionHistory = [];
 
-    // Web Audio API beep
+    // Audio confirmation beep using Web Audio API (Clean single confirmation tone)
     var audioCtx = null;
     function playBeep() {
       try {
@@ -190,11 +204,11 @@
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(1400, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+        osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
         osc.start(audioCtx.currentTime);
-        osc.stop(audioCtx.currentTime + 0.15);
+        osc.stop(audioCtx.currentTime + 0.12);
       } catch(e) {}
     }
 
@@ -208,7 +222,7 @@
 
       Html5Qrcode.getCameras().then(function(cameras) {
         if (cameras && cameras.length) {
-          // Filter out printer flatbed scanners (e.g. Brother, Canon, Epson)
+          // Filter out printer scanners (Brother, Canon, Epson)
           var filtered = cameras.filter(function(c) {
             var lbl = (c.label || '').toLowerCase();
             return lbl.indexOf('brother') === -1 && 
@@ -219,9 +233,7 @@
           });
           availableCameras = filtered.length > 0 ? filtered : cameras;
 
-          // Smart camera index selection:
-          // 1. If mobile device with back camera, choose back/environment camera
-          // 2. Otherwise prefer "Integrated Camera" or first real webcam
+          // Select back camera if available, otherwise Integrated Webcam
           var chosenIndex = 0;
           for (var i = 0; i < availableCameras.length; i++) {
             var l = (availableCameras[i].label || '').toLowerCase();
@@ -235,13 +247,12 @@
           }
 
           currentCameraIndex = chosenIndex;
-          console.log("Selected camera:", availableCameras[currentCameraIndex]);
           startScannerWithCamera(availableCameras[currentCameraIndex].id);
         } else {
           startScannerFallback();
         }
       }).catch(function(err) {
-        console.warn('getCameras error, falling back:', err);
+        console.warn('getCameras query failed, attempting direct stream:', err);
         startScannerFallback();
       });
     }
@@ -251,26 +262,28 @@
       var config = { fps: 15, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
       html5QrCode.start(cameraId, config, onScanSuccess, function(err) {})
         .then(function() {
+          isScanningActive = true;
           hideCameraBlockedUI();
         })
         .catch(function(err) {
-          console.error('Camera ID start error:', err);
+          console.error('Camera ID error, falling back:', err);
           startScannerFallback();
         });
     }
 
     function startScannerFallback() {
       var config = { fps: 15, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
-      // Try environment first (phones)
+      // Attempt environment camera first (mobile)
       html5QrCode.start({ facingMode: 'environment' }, config, onScanSuccess, function(err) {})
         .then(function() {
+          isScanningActive = true;
           hideCameraBlockedUI();
         })
         .catch(function(errEnv) {
-          console.warn('Environment camera failed, trying user camera (laptop webcam)...', errEnv);
-          // Try user facing mode (laptop front webcam)
+          // Attempt user facing camera (laptop webcam)
           html5QrCode.start({ facingMode: 'user' }, config, onScanSuccess, function(err) {})
             .then(function() {
+              isScanningActive = true;
               hideCameraBlockedUI();
             })
             .catch(function(errUser) {
@@ -279,17 +292,47 @@
         });
     }
 
+    function requestCameraAccess() {
+      var errBox = document.getElementById('technicalError');
+      if (errBox) errBox.textContent = 'Requesting camera permissions...';
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (errBox) errBox.textContent = 'MediaDevices API is not supported in this browser.';
+        return;
+      }
+
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function(stream) {
+          stream.getTracks().forEach(function(t) { t.stop(); });
+          hideCameraBlockedUI();
+          initLiveScanner();
+        })
+        .catch(function(err) {
+          console.error('Direct camera access request error:', err);
+          if (errBox) {
+            errBox.textContent = 'Status: ' + err.name + ' (' + err.message + ')';
+          }
+          if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            alert('Camera Permission Blocked: Please click the site settings icon on the left of the address bar and enable Camera access.');
+          } else if (err.name === 'NotReadableError') {
+            alert('Camera Unavailable: The camera is currently locked by another application or the laptop hardware privacy shutter is closed.');
+          } else {
+            alert('Camera Initialization Notice: ' + err.name);
+          }
+        });
+    }
+
     function showCameraBlockedUI(err) {
-      console.error('All camera attempts failed:', err);
+      isScanningActive = false;
       var notice = document.getElementById('cameraBlockedNotice');
       var reticle = document.getElementById('scanReticle');
       if (notice) notice.style.display = 'block';
       if (reticle) reticle.style.display = 'none';
 
-      document.getElementById('resultBox').style.display = 'block';
-      document.getElementById('resultCode').textContent = 'Camera Blocked';
-      document.getElementById('resultStatus').textContent = 'Paki-click ang Camera icon sa dulo ng address bar at piliin ang "Always allow".';
-      document.getElementById('resultStatus').style.color = '#f87171';
+      var errBox = document.getElementById('technicalError');
+      if (errBox && err) {
+        errBox.textContent = 'Diagnostic: ' + (err.name || 'Notice') + ' (' + (err.message || 'Access blocked or uninitialized') + ')';
+      }
     }
 
     function hideCameraBlockedUI() {
@@ -302,75 +345,80 @@
     function switchCamera() {
       if (!availableCameras || availableCameras.length < 2) return;
       currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
-      if (html5QrCode && html5QrCode.isScanning) {
+      if (html5QrCode && isScanningActive) {
         html5QrCode.stop().then(function() {
           startScannerWithCamera(availableCameras[currentCameraIndex].id);
         });
       }
     }
 
-    // Real-time scan success callback (pure lookup, NO sheet logging)
+    // ═════════════════════════════════════════════════════════════
+    // ONE SCAN AT A TIME: STOP CAMERA IMMEDIATELY UPON DETECTION
+    // ═════════════════════════════════════════════════════════════
     function onScanSuccess(decodedText) {
       if (!decodedText || !decodedText.trim()) return;
-      var code = decodedText.trim();
-      var now = Date.now();
+      var rawCode = decodedText.trim();
 
-      // Debounce 2.5s for same barcode
-      if (code === lastScannedCode && (now - lastScannedTime) < 2500) return;
-      lastScannedCode = code;
-      lastScannedTime = now;
+      // Clean prefix if barcode was printed with "HOSTNAME:" or "PROP:"
+      var cleanCode = rawCode.replace(/^HOSTNAME:\s*/i, '').replace(/^PROP:\s*/i, '').trim();
 
+      lastScannedCode = cleanCode;
+
+      // 1. Play audio confirmation
       playBeep();
 
-      // Clean prefix if any
-      var cleanCode = code.replace(/^HOSTNAME:\s*/i, '').replace(/^PROP:\s*/i, '').trim();
+      // 2. STOP CAMERA IMMEDIATELY (One scan at a time)
+      if (html5QrCode && isScanningActive) {
+        isScanningActive = false;
+        html5QrCode.stop().catch(function(e) { console.warn('Camera stop:', e); });
+      }
 
-      document.getElementById('resultBox').style.display = 'block';
+      // 3. Update Result Card UI
+      document.getElementById('reader-container').style.display = 'none';
+      document.getElementById('actionControls').style.display = 'none';
+
+      var resultBox = document.getElementById('resultBox');
+      resultBox.style.display = 'block';
       document.getElementById('resultCode').textContent = cleanCode;
-      document.getElementById('resultStatus').textContent = 'Asset matched! Loading details in Dashboard...';
 
-      // Log in local session list
-      sessionHistory.unshift({ code: cleanCode, time: new Date().toLocaleTimeString() });
-      updateHistoryUi();
+      // Prepare target inventory dashboard URL with scan query parameter
+      var targetUrl = returnUrl;
+      var sep = targetUrl.indexOf('?') > -1 ? '&' : '?';
+      var directInventoryLink = targetUrl + sep + 'scan=' + encodeURIComponent(cleanCode);
 
-      // Scenario A: Opened from Dashboard via window.open
+      var btnOpen = document.getElementById('btnOpenInventory');
+      btnOpen.href = directInventoryLink;
+
+      // Scenario A: Opened from Dashboard in popup or iframe (window.opener active)
       if (window.opener && !window.opener.closed) {
-        window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode }, '*');
+        document.getElementById('resultStatus').textContent = 'Asset tag matched. Transferring to Inventory Dashboard...';
+        window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode, code: cleanCode }, '*');
         setTimeout(function() {
           window.close();
-        }, 700);
+        }, 600);
         return;
       }
 
-      // Scenario B: Opened standalone with returnUrl
-      if (returnUrl) {
-        setTimeout(function() {
-          var sep = returnUrl.indexOf('?') > -1 ? '&' : '?';
-          window.location.href = returnUrl + sep + 'scan=' + encodeURIComponent(cleanCode);
-        }, 600);
-      }
+      // Scenario B: Standalone mode (Redirect directly to Apps Script Dashboard)
+      document.getElementById('resultStatus').textContent = 'Asset tag verified. Redirecting to Inventory Dashboard in 2 seconds...';
+      setTimeout(function() {
+        window.location.href = directInventoryLink;
+      }, 1800);
     }
 
-    function updateHistoryUi() {
-      var card = document.getElementById('historyCard');
-      var list = document.getElementById('historyList');
-      if (!sessionHistory.length) return;
-      card.style.display = 'block';
-      list.innerHTML = sessionHistory.slice(0, 10).map(function(item) {
-        return '<div class="history-item">' +
-          '<span class="history-code">' + item.code + '</span>' +
-          '<span class="history-time">' + item.time + '</span>' +
-        '</div>';
-      }).join('');
+    function resetScannerForNextAsset() {
+      document.getElementById('resultBox').style.display = 'none';
+      document.getElementById('reader-container').style.display = 'flex';
+      document.getElementById('actionControls').style.display = 'flex';
+      lastScannedCode = '';
+      initLiveScanner();
     }
 
     function returnToDashboard() {
       if (window.opener && !window.opener.closed) {
         window.close();
-      } else if (returnUrl) {
-        window.location.href = returnUrl;
       } else {
-        history.back();
+        window.location.href = returnUrl;
       }
     }
 
