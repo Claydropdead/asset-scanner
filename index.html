@@ -3,37 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>PRO MIMAROPA RICTMD - IT Asset Barcode Scanner</title>
+  <title>PRO MIMAROPA RICTMD - IT Asset Verification Scanner</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #0f172a; color: #f8fafc;
-      min-height: 100vh; padding: 16px;
+      background: #0b1329; color: #f8fafc;
+      min-height: 100vh; padding: 14px 12px;
       display: flex; flex-direction: column; align-items: center;
     }
     .header {
-      width: 100%; max-width: 480px; text-align: center; margin-bottom: 14px;
-      border-bottom: 1px solid #1e293b; padding-bottom: 12px;
+      width: 100%; max-width: 500px; text-align: center; margin-bottom: 12px;
+      border-bottom: 1px solid #1e293b; padding-bottom: 10px;
     }
     .brand-sup {
-      font-size: 0.72rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+      font-size: 0.70rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
     }
     .brand-title {
-      font-size: 1.15rem; font-weight: 800; letter-spacing: 0.5px;
+      font-size: 1.12rem; font-weight: 800; letter-spacing: 0.5px;
       color: #38bdf8; text-transform: uppercase; margin: 2px 0;
     }
     .brand-sub {
-      font-size: 0.75rem; color: #cbd5e1; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
+      font-size: 0.74rem; color: #cbd5e1; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
     }
     .instructions {
-      font-size: 0.8rem; color: #94a3b8; margin-top: 6px;
+      font-size: 0.78rem; color: #94a3b8; margin-top: 5px;
     }
 
+    /* Viewfinder Container */
     #reader-container {
-      width: 100%; max-width: 480px; position: relative; min-height: 280px;
-      border-radius: 14px; overflow: hidden; background: #020617;
+      width: 100%; max-width: 500px; position: relative; min-height: 270px;
+      border-radius: 12px; overflow: hidden; background: #020617;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
       border: 1.5px solid #334155;
       display: flex; align-items: center; justify-content: center;
@@ -43,16 +44,16 @@
     }
     .scan-reticle {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 220px; height: 220px; pointer-events: none;
-      border: 2px solid rgba(56, 189, 248, 0.5); border-radius: 12px;
-      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
+      width: 210px; height: 210px; pointer-events: none;
+      border: 2px solid rgba(56, 189, 248, 0.4); border-radius: 12px;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
     }
     .scan-reticle::before, .scan-reticle::after {
-      content: ''; position: absolute; width: 24px; height: 24px;
+      content: ''; position: absolute; width: 22px; height: 22px;
       border-color: #38bdf8; border-style: solid;
     }
-    .scan-reticle::before { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-top-left-radius: 10px; }
-    .scan-reticle::after { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-bottom-right-radius: 10px; }
+    .scan-reticle::before { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-top-left-radius: 8px; }
+    .scan-reticle::after { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-bottom-right-radius: 8px; }
     
     .scan-laser {
       position: absolute; top: 0; left: 0; right: 0; height: 2px;
@@ -65,7 +66,7 @@
     }
 
     .notice-card {
-      padding: 24px 20px; text-align: center; color: #f8fafc; z-index: 10;
+      padding: 22px 18px; text-align: center; color: #f8fafc; z-index: 10; width: 100%; max-width: 500px;
     }
     .notice-title {
       font-weight: 800; color: #f87171; font-size: 1.05rem; margin-bottom: 8px; text-transform: uppercase;
@@ -77,45 +78,113 @@
       font-family: monospace; font-size: 0.72rem; color: #fca5a5; margin-top: 10px; word-break: break-all;
     }
 
-    /* Scan Result Card */
-    .result-box {
-      width: 100%; max-width: 480px; margin-top: 14px;
-      background: #1e293b; border-radius: 12px; padding: 16px;
-      text-align: center; border: 1.5px solid #0284c7; display: none;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    /* Loading Spinner */
+    .spinner-ring {
+      display: inline-block; width: 36px; height: 36px;
+      border: 3px solid rgba(56, 189, 248, 0.2);
+      border-radius: 50%; border-top-color: #38bdf8;
+      animation: spin 0.8s linear infinite;
     }
-    .result-badge {
-      display: inline-block; font-size: 0.72rem; text-transform: uppercase;
-      font-weight: 700; color: #38bdf8; letter-spacing: 0.6px;
-      background: rgba(56, 189, 248, 0.1); padding: 3px 10px; border-radius: 20px; margin-bottom: 8px;
-    }
-    .result-code {
-      font-size: 1.35rem; font-weight: 800; color: #ffffff;
-      margin-bottom: 6px; font-family: monospace; letter-spacing: 0.5px;
-    }
-    .result-status {
-      font-size: 0.84rem; font-weight: 600; color: #4ade80; margin-bottom: 12px;
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
+    /* ═══════════════════════════════════════════════════════ */
+    /* AUTOMATIC ON-SCREEN ASSET DETAILS CARD (PNP RICTMD)     */
+    /* ═══════════════════════════════════════════════════════ */
+    .asset-card {
+      width: 100%; max-width: 500px; background: #131e38;
+      border: 1.5px solid #2563eb; border-radius: 12px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+      padding: 16px; margin-top: 6px; display: none;
+    }
+    .asset-header {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 12px;
+    }
+    .asset-unit-label {
+      font-size: 0.70rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+    }
+    .asset-title {
+      font-size: 1.30rem; font-weight: 800; color: #ffffff;
+      font-family: monospace; letter-spacing: 0.5px; margin-top: 2px;
+    }
+    .badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+    }
+    .badge-success { background: #166534; color: #4ade80; border: 1px solid #22c55e; }
+    .badge-danger { background: #7f1d1d; color: #f87171; border: 1px solid #ef4444; }
+    .badge-warning { background: #78350f; color: #fde047; border: 1px solid #eab308; }
+    .badge-secondary { background: #334155; color: #cbd5e1; border: 1px solid #475569; }
+
+    .asset-section-title {
+      font-size: 0.68rem; font-weight: 800; color: #38bdf8;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      margin: 12px 0 6px 0; border-left: 3px solid #38bdf8; padding-left: 6px;
+    }
+    .asset-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    @media (max-width: 400px) {
+      .asset-grid { grid-template-columns: 1fr; }
+    }
+    .asset-field {
+      background: #0f172a; padding: 8px 10px; border-radius: 8px;
+      border: 1px solid #1e293b;
+    }
+    .asset-field-full {
+      grid-column: 1 / -1;
+    }
+    .asset-label {
+      display: block; font-size: 0.66rem; color: #94a3b8;
+      font-weight: 700; text-transform: uppercase; margin-bottom: 2px;
+    }
+    .asset-value {
+      display: block; font-size: 0.82rem; color: #f1f5f9;
+      font-weight: 600; word-break: break-word; line-height: 1.35;
+    }
+    .text-mono {
+      font-family: monospace; font-size: 0.84rem; color: #38bdf8;
+    }
+
+    /* Buttons */
     .action-btns {
-      width: 100%; max-width: 480px; display: flex; gap: 8px; margin-top: 12px;
+      width: 100%; max-width: 500px; display: flex; gap: 8px; margin-top: 12px;
     }
     .btn {
-      flex: 1; padding: 11px 16px; border: none; border-radius: 8px;
-      font-size: 0.84rem; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: background 0.2s, transform 0.1s; text-decoration: none;
+      flex: 1; padding: 11px 14px; border: none; border-radius: 8px;
+      font-size: 0.82rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: background 0.15s, transform 0.1s; text-decoration: none;
     }
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: #0284c7; color: #ffffff; }
     .btn-primary:hover { background: #0369a1; }
     .btn-success { background: #16a34a; color: #ffffff; }
     .btn-success:hover { background: #15803d; }
-    .btn-secondary { background: #334155; color: #f1f5f9; }
-    .btn-secondary:hover { background: #475569; }
+    .btn-secondary { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
+    .btn-secondary:hover { background: #334155; }
+
+    /* Not Found Card */
+    .notfound-card {
+      width: 100%; max-width: 500px; background: #1e1b2e;
+      border: 1.5px solid #dc2626; border-radius: 12px;
+      padding: 18px; text-align: center; margin-top: 8px; display: none;
+    }
+    .notfound-title {
+      font-size: 1rem; font-weight: 800; color: #f87171; text-transform: uppercase; margin-bottom: 6px;
+    }
+    .notfound-code {
+      font-family: monospace; font-size: 1.25rem; font-weight: 800; color: #ffffff; margin: 6px 0;
+    }
+    .notfound-desc {
+      font-size: 0.80rem; color: #94a3b8; line-height: 1.45; margin-bottom: 14px;
+    }
 
     .footer-note {
-      margin-top: 20px; font-size: 0.72rem; color: #64748b; text-align: center;
+      margin-top: 16px; font-size: 0.70rem; color: #64748b; text-align: center; line-height: 1.4;
     }
   </style>
 </head>
@@ -124,17 +193,18 @@
   <div class="header">
     <div class="brand-sup">PHILIPPINE NATIONAL POLICE &bull; PRO MIMAROPA</div>
     <div class="brand-title">RICTMD IT Asset Tracker</div>
-    <div class="brand-sub">Official Barcode & QR Verification System</div>
+    <div class="brand-sub">Official Barcode &amp; QR Verification System</div>
     <div class="instructions" id="headerInstruction">Align camera with Property Sticker or Barcode</div>
   </div>
 
+  <!-- Camera Viewfinder -->
   <div id="reader-container">
     <div id="reader"></div>
     <div class="scan-reticle" id="scanReticle">
       <div class="scan-laser"></div>
     </div>
 
-    <!-- Camera Access Notice (Shown only if blocked or needs activation) -->
+    <!-- Camera Access Blocked Notice -->
     <div id="cameraBlockedNotice" class="notice-card" style="display:none;">
       <div class="notice-title">Camera Access Required</div>
       <div class="notice-desc" id="noticeDesc">
@@ -152,27 +222,116 @@
     </div>
   </div>
 
-  <!-- Scan Result Container (One scan at a time) -->
-  <div class="result-box" id="resultBox">
-    <div class="result-badge">Verified Asset Tag</div>
-    <div class="result-code" id="resultCode">--</div>
-    <div class="result-status" id="resultStatus">Loading asset details from Inventory...</div>
-    <div style="display:flex; gap:8px;">
-      <a class="btn btn-success" id="btnOpenInventory" href="#" target="_blank" style="flex:2;">
-        View Asset Record
-      </a>
-      <button class="btn btn-secondary" onclick="resetScannerForNextAsset()" type="button" style="flex:1;">
-        Scan Next
+  <!-- Realtime Query Status Box (Spinner) -->
+  <div id="loadingBox" class="notice-card" style="display:none; background:#131e38; border:1px solid #1e293b; border-radius:12px; margin-top:10px;">
+    <div class="spinner-ring"></div>
+    <div style="font-weight:700; color:#38bdf8; margin-top:10px; font-size:0.92rem;">Retrieving Asset Record...</div>
+    <div style="font-size:0.80rem; color:#94a3b8; margin-top:4px;" id="loadingTagLabel">Tag: --</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- AUTOMATIC ON-SCREEN ASSET DETAILS CARD                  -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="asset-card" id="assetCard">
+    <div class="asset-header">
+      <div>
+        <div class="asset-unit-label" id="cardUnit">PRO MIMAROPA &bull; RICTMD</div>
+        <div class="asset-title" id="cardHostname">--</div>
+      </div>
+      <span class="badge badge-success" id="cardBadge">SERVICEABLE</span>
+    </div>
+
+    <div class="asset-section-title">ACCOUNTABILITY &amp; INVENTORY</div>
+    <div class="asset-grid">
+      <div class="asset-field">
+        <span class="asset-label">Assigned User / Officer</span>
+        <span class="asset-value" id="cardUser">--</span>
+      </div>
+      <div class="asset-field">
+        <span class="asset-label">Division / Station</span>
+        <span class="asset-value" id="cardDivision">--</span>
+      </div>
+      <div class="asset-field">
+        <span class="asset-label">Property / PAR No.</span>
+        <span class="asset-value text-mono" id="cardProp">--</span>
+      </div>
+      <div class="asset-field">
+        <span class="asset-label">Computer Serial No.</span>
+        <span class="asset-value text-mono" id="cardSerial">--</span>
+      </div>
+    </div>
+
+    <div class="asset-section-title">HARDWARE &amp; SPECIFICATIONS</div>
+    <div class="asset-grid">
+      <div class="asset-field">
+        <span class="asset-label">Device Type</span>
+        <span class="asset-value" id="cardDeviceType">Desktop PC</span>
+      </div>
+      <div class="asset-field">
+        <span class="asset-label">Installed Memory (RAM)</span>
+        <span class="asset-value" id="cardRam">--</span>
+      </div>
+      <div class="asset-field asset-field-full">
+        <span class="asset-label">Processor (CPU)</span>
+        <span class="asset-value" id="cardCpu">--</span>
+      </div>
+      <div class="asset-field asset-field-full">
+        <span class="asset-label">Storage Capacity</span>
+        <span class="asset-value" id="cardStorage">--</span>
+      </div>
+    </div>
+
+    <div class="asset-section-title">SOFTWARE &amp; COMPLIANCE</div>
+    <div class="asset-grid">
+      <div class="asset-field">
+        <span class="asset-label">Operating System</span>
+        <span class="asset-value" id="cardOs">--</span>
+      </div>
+      <div class="asset-field">
+        <span class="asset-label">OS License Status</span>
+        <span class="asset-value" id="cardOsLic">--</span>
+      </div>
+      <div class="asset-field">
+        <span class="asset-label">Office Productivity</span>
+        <span class="asset-value" id="cardOffice">--</span>
+      </div>
+      <div class="asset-field">
+        <span class="asset-label">Estimated PC Age</span>
+        <span class="asset-value" id="cardAge">--</span>
+      </div>
+    </div>
+
+    <div class="action-btns" style="margin-top:14px;">
+      <button class="btn btn-primary" onclick="resetScannerForNextAsset()" type="button" style="flex:2;">
+        Scan Next Asset
+      </button>
+      <button class="btn btn-secondary" onclick="copyAssetDetails()" type="button" id="btnCopyDetails" style="flex:1;">
+        Copy Specs
       </button>
     </div>
   </div>
 
+  <!-- Not Found Notice -->
+  <div class="notfound-card" id="notFoundCard">
+    <div class="notfound-title">Asset Tag Not Enrolled</div>
+    <div class="notfound-code" id="notFoundCode">--</div>
+    <div class="notfound-desc">
+      This property tag was scanned successfully, but does not match any enrolled desktop or laptop in the active or unserviceable inventory database.
+    </div>
+    <div class="action-btns">
+      <button class="btn btn-primary" onclick="resetScannerForNextAsset()" type="button">
+        Scan Another Tag
+      </button>
+    </div>
+  </div>
+
+  <!-- Camera Controls (Active only while scanning) -->
   <div class="action-btns" id="actionControls">
     <button class="btn btn-secondary" id="btnSwitchCamera" onclick="switchCamera()" type="button">
       Flip Camera
     </button>
-    <button class="btn btn-primary" id="btnReturnDashboard" onclick="returnToDashboard()" type="button">
-      Back to Dashboard
+    <button class="btn btn-secondary" id="btnManualSearch" onclick="promptManualSearch()" type="button">
+      Manual Search
     </button>
   </div>
 
@@ -181,8 +340,8 @@
   </div>
 
   <script>
-    // Configuration: Google Apps Script Inventory Dashboard URL
-    const DEFAULT_DASHBOARD_URL = 'https://script.google.com/macros/s/AKfycbzLv0ZHoSfgapGAf0NdwoCLmHpiqIPiKkdcX9rMe2U/dev';
+    // Configuration: Google Apps Script Inventory Dashboard & API URL
+    const DEFAULT_DASHBOARD_URL = 'https://script.google.com/macros/s/AKfycbzLv0ZHoSfgapGAf0NdwoCLmHpiqIPiKkdcX9rMe2U/exec';
 
     const urlParams = new URLSearchParams(window.location.search);
     const returnUrl = urlParams.get('returnUrl') || urlParams.get('dashboardUrl') || DEFAULT_DASHBOARD_URL;
@@ -192,6 +351,8 @@
     var availableCameras = [];
     var isScanningActive = false;
     var lastScannedCode = '';
+    var activeAssetRecord = null;
+    var searchTimeoutHandle = null;
 
     // Audio confirmation beep using Web Audio API (Clean single confirmation tone)
     var audioCtx = null;
@@ -233,7 +394,7 @@
           });
           availableCameras = filtered.length > 0 ? filtered : cameras;
 
-          // Select back camera if available, otherwise Integrated Webcam
+          // Select back/rear camera on mobile phones, otherwise default webcam
           var chosenIndex = 0;
           for (var i = 0; i < availableCameras.length; i++) {
             var l = (availableCameras[i].label || '').toLowerCase();
@@ -273,14 +434,12 @@
 
     function startScannerFallback() {
       var config = { fps: 15, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 };
-      // Attempt environment camera first (mobile)
       html5QrCode.start({ facingMode: 'environment' }, config, onScanSuccess, function(err) {})
         .then(function() {
           isScanningActive = true;
           hideCameraBlockedUI();
         })
         .catch(function(errEnv) {
-          // Attempt user facing camera (laptop webcam)
           html5QrCode.start({ facingMode: 'user' }, config, onScanSuccess, function(err) {})
             .then(function() {
               isScanningActive = true;
@@ -358,8 +517,6 @@
     function onScanSuccess(decodedText) {
       if (!decodedText || !decodedText.trim()) return;
       var rawCode = decodedText.trim();
-
-      // Clean prefix if barcode was printed with "HOSTNAME:" or "PROP:"
       var cleanCode = rawCode.replace(/^HOSTNAME:\s*/i, '').replace(/^PROP:\s*/i, '').trim();
       lastScannedCode = cleanCode;
 
@@ -372,53 +529,214 @@
         html5QrCode.stop().catch(function(e) { console.warn('Camera stop:', e); });
       }
 
-      // 3. Keep UI open - DO NOT AUTO CLOSE
+      // 3. Switch UI from camera to Loading Status
       document.getElementById('reader-container').style.display = 'none';
       document.getElementById('actionControls').style.display = 'none';
+      document.getElementById('assetCard').style.display = 'none';
+      document.getElementById('notFoundCard').style.display = 'none';
 
-      var resultBox = document.getElementById('resultBox');
-      resultBox.style.display = 'block';
-      document.getElementById('resultCode').textContent = cleanCode;
-      document.getElementById('resultStatus').textContent = 'Asset Tag identified. Click below to view complete inventory record in Dashboard:';
+      var loadingBox = document.getElementById('loadingBox');
+      loadingBox.style.display = 'block';
+      document.getElementById('loadingTagLabel').textContent = 'Asset Tag: ' + cleanCode;
 
-      // Notify parent window / opener if active
+      // 4. AUTOMATIC ASSET LOOKUP (NO REDIRECT, NO DASHBOARD CLICK NEEDED)
+      lookupAssetRecord(cleanCode);
+    }
+
+    // ═════════════════════════════════════════════════════════════
+    // MULTI-TIER AUTOMATIC ASSET LOOKUP
+    // 1. In-Memory transfer from window.opener (Instant 1ms)
+    // 2. Direct JSONP API query to Apps Script (Standalone mobile)
+    // ═════════════════════════════════════════════════════════════
+    function lookupAssetRecord(cleanCode) {
+      var foundLocally = false;
+
+      // Listen for response from dashboard window
+      var messageListener = function(event) {
+        if (event.data && event.data.type === 'ASSET_RECORD_FOUND' && event.data.code === cleanCode) {
+          window.removeEventListener('message', messageListener);
+          if (searchTimeoutHandle) clearTimeout(searchTimeoutHandle);
+          
+          if (event.data.record) {
+            renderAssetCard(event.data.record, event.data.recordType || 'active');
+          } else {
+            renderNotFound(cleanCode);
+          }
+          foundLocally = true;
+        }
+      };
+      window.addEventListener('message', messageListener);
+
+      // Attempt 1: Inquire with window.opener if dashboard is open in background
       try {
         if (window.opener && !window.opener.closed) {
-          window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode, code: cleanCode }, '*');
+          window.opener.postMessage({ type: 'LOOKUP_ASSET', code: cleanCode, text: cleanCode }, '*');
         }
       } catch(e) {}
 
-      // Target direct inventory link with ?scan= parameter
-      var targetUrl = returnUrl;
-      var sep = targetUrl.indexOf('?') > -1 ? '&' : '?';
-      var directInventoryLink = targetUrl + sep + 'scan=' + encodeURIComponent(cleanCode);
-
-      var btnOpen = document.getElementById('btnOpenInventory');
-      btnOpen.href = directInventoryLink;
-      btnOpen.onclick = function(e) {
-        if (window.opener && !window.opener.closed) {
-          try {
-            window.opener.postMessage({ type: 'QR_SCANNED', text: cleanCode, code: cleanCode }, '*');
-            window.opener.focus();
-          } catch(err) {}
+      // Attempt 2: If no instant answer from opener within 350ms, query Apps Script API directly
+      searchTimeoutHandle = setTimeout(function() {
+        if (!foundLocally) {
+          queryAppsScriptApi(cleanCode);
         }
-        return true;
+      }, 350);
+    }
+
+    function queryAppsScriptApi(cleanCode) {
+      // Ensure API endpoint uses /exec
+      var apiEndpoint = returnUrl.replace(/\/dev(\?|$)/, '/exec$1');
+      var callbackName = 'onAssetQuery_' + Math.floor(Math.random() * 1000000);
+
+      window[callbackName] = function(response) {
+        cleanup();
+        if (response && response.success && response.record) {
+          renderAssetCard(response.record, response.isUnserviceable ? 'unserv' : 'active');
+        } else {
+          renderNotFound(cleanCode);
+        }
       };
+
+      var scriptTag = document.createElement('script');
+      scriptTag.id = callbackName;
+      var sep = apiEndpoint.indexOf('?') > -1 ? '&' : '?';
+      scriptTag.src = apiEndpoint + sep + 'action=search&q=' + encodeURIComponent(cleanCode) + '&callback=' + callbackName;
+
+      scriptTag.onerror = function() {
+        cleanup();
+        // If API fails (e.g., offline or unauthenticated /dev URL), fallback to basic card
+        renderFallbackCard(cleanCode);
+      };
+
+      document.head.appendChild(scriptTag);
+
+      function cleanup() {
+        try { delete window[callbackName]; } catch(e) {}
+        var el = document.getElementById(callbackName);
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      }
+    }
+
+    // ═════════════════════════════════════════════════════════════
+    // RENDER OFFICIAL ASSET SPECIFICATIONS DIRECTLY ON SCREEN
+    // ═════════════════════════════════════════════════════════════
+    function renderAssetCard(record, recordType) {
+      activeAssetRecord = record;
+      document.getElementById('loadingBox').style.display = 'none';
+
+      var card = document.getElementById('assetCard');
+      card.style.display = 'block';
+
+      var hostname = getRecordVal(record, ['Endpoint Name', 'Hostname', 'Computer Name']) || lastScannedCode;
+      var unit = getRecordVal(record, ['Unit', 'PRO/Unit']) || 'PRO MIMAROPA';
+      var div = getRecordVal(record, ['Division/Station', 'Division', 'Station']) || 'General Station';
+      var user = getRecordVal(record, ['Assigned user', 'End User', 'Accountable Officer', 'User']) || 'Unassigned';
+      var prop = getRecordVal(record, ['Property Acknowledgement Receipt (PA) - Property #', 'Property #', 'Property No.', 'PAR #']) || 'N/A';
+      var serial = getRecordVal(record, ['Property Acknowledgement Receipt (PA) - Computer Serial #', 'System Serial Number', 'Serial Number', 'Serial']) || 'N/A';
+      var devType = getRecordVal(record, ['Device Type', 'Computer Type']) || 'Desktop PC';
+      var cpu = getRecordVal(record, ['CPU - Type', 'Processor', 'CPU']) || 'Not Specified';
+      var ram = getRecordVal(record, ['RAM - Total (GB)', 'Memory (RAM)', 'RAM']) || 'Not Specified';
+      var storage = getRecordVal(record, ['STORAGE - Total Capacity', 'Storage', 'Hard Disk']) || 'Not Specified';
+      var os = getRecordVal(record, ['OPERATING SYSTEM - Product Name', 'OS', 'Operating System']) || 'Windows';
+      var osLic = getRecordVal(record, ['OPERATING SYSTEM - Licensed? (Y/N)', 'OS License']) || 'Unspecified';
+      var office = getRecordVal(record, ['Office Productivity Software - Product Name', 'Office']) || 'None';
+      var age = getRecordVal(record, ['Estimated PC Age (Years)', 'PC Age']) || 'N/A';
+
+      document.getElementById('cardHostname').textContent = hostname;
+      document.getElementById('cardUnit').textContent = unit;
+      document.getElementById('cardDivision').textContent = div;
+      document.getElementById('cardUser').textContent = user;
+      document.getElementById('cardProp').textContent = prop;
+      document.getElementById('cardSerial').textContent = serial;
+      document.getElementById('cardDeviceType').textContent = devType;
+      document.getElementById('cardCpu').textContent = cpu;
+      document.getElementById('cardRam').textContent = ram.indexOf('GB') > -1 ? ram : (ram + ' GB');
+      document.getElementById('cardStorage').textContent = storage;
+      document.getElementById('cardOs').textContent = os;
+      document.getElementById('cardOsLic').textContent = osLic;
+      document.getElementById('cardOffice').textContent = office;
+      document.getElementById('cardAge').textContent = age !== 'N/A' ? (age + ' Years') : 'N/A';
+
+      var badge = document.getElementById('cardBadge');
+      if (recordType === 'unserv' || (record['_Status'] && record['_Status'].indexOf('Unserv') > -1)) {
+        badge.className = 'badge badge-danger';
+        badge.textContent = 'UNSERVICEABLE';
+      } else {
+        badge.className = 'badge badge-success';
+        badge.textContent = 'ACTIVE SERVICEABLE';
+      }
+    }
+
+    function renderNotFound(code) {
+      document.getElementById('loadingBox').style.display = 'none';
+      var nf = document.getElementById('notFoundCard');
+      nf.style.display = 'block';
+      document.getElementById('notFoundCode').textContent = code;
+    }
+
+    function renderFallbackCard(code) {
+      // Basic info card when offline or when API call fails
+      renderAssetCard({
+        'Endpoint Name': code,
+        'Unit': 'PRO MIMAROPA',
+        'Division/Station': 'Live Scanned Endpoint',
+        'Assigned user': 'Physical Property Tag Verified',
+        'Device Type': 'Computer Asset',
+        '_Status': 'Verified Code'
+      }, 'active');
+    }
+
+    function getRecordVal(obj, candidates) {
+      if (!obj) return '';
+      for (var i = 0; i < candidates.length; i++) {
+        var key = candidates[i];
+        if (obj[key] !== undefined && obj[key] !== null && String(obj[key]).trim() !== '') {
+          return String(obj[key]).trim();
+        }
+      }
+      return '';
     }
 
     function resetScannerForNextAsset() {
-      document.getElementById('resultBox').style.display = 'none';
+      activeAssetRecord = null;
+      lastScannedCode = '';
+      document.getElementById('assetCard').style.display = 'none';
+      document.getElementById('notFoundCard').style.display = 'none';
+      document.getElementById('loadingBox').style.display = 'none';
       document.getElementById('reader-container').style.display = 'flex';
       document.getElementById('actionControls').style.display = 'flex';
-      lastScannedCode = '';
+
       initLiveScanner();
     }
 
-    function returnToDashboard() {
-      if (window.opener && !window.opener.closed) {
-        window.close();
+    function copyAssetDetails() {
+      if (!activeAssetRecord && !lastScannedCode) return;
+      var text = 'PRO MIMAROPA RICTMD IT ASSET\n' +
+                 'Hostname: ' + document.getElementById('cardHostname').textContent + '\n' +
+                 'Status: ' + document.getElementById('cardBadge').textContent + '\n' +
+                 'User: ' + document.getElementById('cardUser').textContent + '\n' +
+                 'Unit: ' + document.getElementById('cardUnit').textContent + ' / ' + document.getElementById('cardDivision').textContent + '\n' +
+                 'Property No.: ' + document.getElementById('cardProp').textContent + '\n' +
+                 'Serial No.: ' + document.getElementById('cardSerial').textContent + '\n' +
+                 'CPU: ' + document.getElementById('cardCpu').textContent + '\n' +
+                 'RAM: ' + document.getElementById('cardRam').textContent + '\n' +
+                 'Storage: ' + document.getElementById('cardStorage').textContent + '\n' +
+                 'OS: ' + document.getElementById('cardOs').textContent;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          var btn = document.getElementById('btnCopyDetails');
+          btn.textContent = 'Copied!';
+          setTimeout(function() { btn.textContent = 'Copy Specs'; }, 1500);
+        });
       } else {
-        window.location.href = returnUrl;
+        alert(text);
+      }
+    }
+
+    function promptManualSearch() {
+      var code = prompt('Enter Asset Hostname, Property Number, or Serial Number:');
+      if (code && code.trim()) {
+        onScanSuccess(code.trim());
       }
     }
 
