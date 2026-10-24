@@ -9,19 +9,19 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #0b1329; color: #f8fafc;
-      min-height: 100vh; padding: 14px 12px;
+      background: #0f172a; color: #f8fafc;
+      min-height: 100vh; padding: 14px 10px;
       display: flex; flex-direction: column; align-items: center;
     }
     .header {
-      width: 100%; max-width: 500px; text-align: center; margin-bottom: 12px;
+      width: 100%; max-width: 650px; text-align: center; margin-bottom: 12px;
       border-bottom: 1px solid #1e293b; padding-bottom: 10px;
     }
     .brand-sup {
       font-size: 0.70rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
     }
     .brand-title {
-      font-size: 1.12rem; font-weight: 800; letter-spacing: 0.5px;
+      font-size: 1.15rem; font-weight: 800; letter-spacing: 0.5px;
       color: #38bdf8; text-transform: uppercase; margin: 2px 0;
     }
     .brand-sub {
@@ -31,9 +31,9 @@
       font-size: 0.78rem; color: #94a3b8; margin-top: 5px;
     }
 
-    /* Viewfinder Container */
+    /* Camera Viewfinder */
     #reader-container {
-      width: 100%; max-width: 500px; position: relative; min-height: 270px;
+      width: 100%; max-width: 650px; position: relative; min-height: 280px;
       border-radius: 12px; overflow: hidden; background: #020617;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6);
       border: 1.5px solid #334155;
@@ -44,8 +44,8 @@
     }
     .scan-reticle {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 210px; height: 210px; pointer-events: none;
-      border: 2px solid rgba(56, 189, 248, 0.4); border-radius: 12px;
+      width: 220px; height: 220px; pointer-events: none;
+      border: 2px solid rgba(56, 189, 248, 0.45); border-radius: 12px;
       box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.45);
     }
     .scan-reticle::before, .scan-reticle::after {
@@ -66,112 +66,128 @@
     }
 
     .notice-card {
-      padding: 22px 18px; text-align: center; color: #f8fafc; z-index: 10; width: 100%; max-width: 500px;
+      padding: 24px 18px; text-align: center; color: #f8fafc; z-index: 10; width: 100%; max-width: 650px;
     }
     .notice-title {
       font-weight: 800; color: #f87171; font-size: 1.05rem; margin-bottom: 8px; text-transform: uppercase;
     }
     .notice-desc {
-      font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; max-width: 340px; margin-left: auto; margin-right: auto;
+      font-size: 0.82rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 14px; max-width: 360px; margin-left: auto; margin-right: auto;
     }
     .notice-error {
       font-family: monospace; font-size: 0.72rem; color: #fca5a5; margin-top: 10px; word-break: break-all;
     }
 
-    /* Loading Spinner */
+    /* Spinner */
     .spinner-ring {
       display: inline-block; width: 36px; height: 36px;
       border: 3px solid rgba(56, 189, 248, 0.2);
       border-radius: 50%; border-top-color: #38bdf8;
       animation: spin 0.8s linear infinite;
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ═══════════════════════════════════════════════════════════════ */
+    /* EXACT EQUIPMENT DETAILS MODAL (MATCHES DASHBOARD MODAL 100%)    */
+    /* ═══════════════════════════════════════════════════════════════ */
+    .equipment-modal-card {
+      width: 100%; max-width: 650px; background: #ffffff;
+      border-radius: 8px; overflow: hidden;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+      margin-top: 6px; display: none; color: #212529;
+    }
+    .equipment-modal-header {
+      background: #212529; color: #ffffff;
+      padding: 10px 16px; display: flex;
+      justify-content: space-between; align-items: center;
+    }
+    .equipment-modal-title {
+      font-size: 1rem; font-weight: 700; margin: 0; letter-spacing: 0.3px;
+    }
+    .equipment-modal-close {
+      background: transparent; border: none; color: #adb5bd;
+      font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0 4px;
+    }
+    .equipment-modal-close:hover { color: #ffffff; }
+
+    .equipment-sub-header {
+      background: #f8f9fa; border-bottom: 1px solid #dee2e6;
+      padding: 10px 16px; display: flex;
+      justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 8px;
+    }
+    .equipment-pc-name {
+      font-size: 1.18rem; font-weight: 700; color: #0d6efd;
+      margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .equipment-badge {
+      display: inline-block; font-size: 0.75rem; font-weight: 700;
+      padding: 5px 12px; border-radius: 4px; text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-active { background: #198754; color: #ffffff; }
+    .badge-unserv { background: #dc3545; color: #ffffff; }
+    .badge-ber    { background: #ffc107; color: #000000; }
+
+    .equipment-table-container {
+      max-height: 60vh; overflow-y: auto; background: #ffffff;
+    }
+    .equipment-table {
+      width: 100%; border-collapse: collapse; font-size: 0.84rem;
+    }
+    .equipment-table th, .equipment-table td {
+      padding: 8px 14px; border-top: 1px solid #e9ecef;
+      text-align: left; vertical-align: top; line-height: 1.4;
+    }
+    .equipment-table tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+    .equipment-table tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    .equipment-table tr:hover {
+      background-color: #f1f5f9;
+    }
+    .equipment-table th {
+      width: 38%; color: #495057; font-weight: 700;
+    }
+    .equipment-table td {
+      color: #212529; word-break: break-word;
     }
 
-    /* ═══════════════════════════════════════════════════════ */
-    /* AUTOMATIC ON-SCREEN ASSET DETAILS CARD (PNP RICTMD)     */
-    /* ═══════════════════════════════════════════════════════ */
-    .asset-card {
-      width: 100%; max-width: 500px; background: #131e38;
-      border: 1.5px solid #2563eb; border-radius: 12px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-      padding: 16px; margin-top: 6px; display: none;
-    }
-    .asset-header {
-      display: flex; justify-content: space-between; align-items: flex-start;
-      border-bottom: 1px solid #1e293b; padding-bottom: 12px; margin-bottom: 12px;
-    }
-    .asset-unit-label {
-      font-size: 0.70rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
-    }
-    .asset-title {
-      font-size: 1.30rem; font-weight: 800; color: #ffffff;
-      font-family: monospace; letter-spacing: 0.5px; margin-top: 2px;
-    }
-    .badge {
-      display: inline-block; font-size: 0.68rem; font-weight: 800;
-      text-transform: uppercase; letter-spacing: 0.5px;
-      padding: 4px 10px; border-radius: 20px; white-space: nowrap;
-    }
-    .badge-success { background: #166534; color: #4ade80; border: 1px solid #22c55e; }
-    .badge-danger { background: #7f1d1d; color: #f87171; border: 1px solid #ef4444; }
-    .badge-warning { background: #78350f; color: #fde047; border: 1px solid #eab308; }
-    .badge-secondary { background: #334155; color: #cbd5e1; border: 1px solid #475569; }
-
-    .asset-section-title {
-      font-size: 0.68rem; font-weight: 800; color: #38bdf8;
-      text-transform: uppercase; letter-spacing: 0.8px;
-      margin: 12px 0 6px 0; border-left: 3px solid #38bdf8; padding-left: 6px;
-    }
-    .asset-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-    }
-    @media (max-width: 400px) {
-      .asset-grid { grid-template-columns: 1fr; }
-    }
-    .asset-field {
-      background: #0f172a; padding: 8px 10px; border-radius: 8px;
-      border: 1px solid #1e293b;
-    }
-    .asset-field-full {
-      grid-column: 1 / -1;
-    }
-    .asset-label {
-      display: block; font-size: 0.66rem; color: #94a3b8;
-      font-weight: 700; text-transform: uppercase; margin-bottom: 2px;
-    }
-    .asset-value {
-      display: block; font-size: 0.82rem; color: #f1f5f9;
-      font-weight: 600; word-break: break-word; line-height: 1.35;
-    }
-    .text-mono {
-      font-family: monospace; font-size: 0.84rem; color: #38bdf8;
+    .equipment-modal-footer {
+      background: #ffffff; border-top: 1px solid #dee2e6;
+      padding: 10px 16px; display: flex;
+      justify-content: space-between; align-items: center; gap: 8px;
     }
 
-    /* Buttons */
+    /* Common Buttons */
     .action-btns {
-      width: 100%; max-width: 500px; display: flex; gap: 8px; margin-top: 12px;
+      width: 100%; max-width: 650px; display: flex; gap: 8px; margin-top: 12px;
     }
     .btn {
-      flex: 1; padding: 11px 14px; border: none; border-radius: 8px;
-      font-size: 0.82rem; font-weight: 700; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 16px; border: none; border-radius: 6px;
+      font-size: 0.84rem; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       transition: background 0.15s, transform 0.1s; text-decoration: none;
     }
     .btn:active { transform: scale(0.98); }
-    .btn-primary { background: #0284c7; color: #ffffff; }
-    .btn-primary:hover { background: #0369a1; }
-    .btn-success { background: #16a34a; color: #ffffff; }
-    .btn-success:hover { background: #15803d; }
-    .btn-secondary { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
-    .btn-secondary:hover { background: #334155; }
+    .btn-primary { background: #0d6efd; color: #ffffff; }
+    .btn-primary:hover { background: #0b5ed7; }
+    .btn-success { background: #198754; color: #ffffff; }
+    .btn-success:hover { background: #157347; }
+    .btn-secondary { background: #6c757d; color: #ffffff; }
+    .btn-secondary:hover { background: #5c636a; }
+    .btn-outline-dark { background: transparent; color: #212529; border: 1px solid #212529; }
+    .btn-outline-dark:hover { background: #212529; color: #ffffff; }
+    .btn-dark-secondary { background: #1e293b; color: #e2e8f0; border: 1px solid #334155; }
+    .btn-dark-secondary:hover { background: #334155; }
 
     /* Not Found Card */
     .notfound-card {
-      width: 100%; max-width: 500px; background: #1e1b2e;
-      border: 1.5px solid #dc2626; border-radius: 12px;
-      padding: 18px; text-align: center; margin-top: 8px; display: none;
+      width: 100%; max-width: 650px; background: #1e1b2e;
+      border: 1.5px solid #dc2626; border-radius: 10px;
+      padding: 20px; text-align: center; margin-top: 8px; display: none;
     }
     .notfound-title {
       font-size: 1rem; font-weight: 800; color: #f87171; text-transform: uppercase; margin-bottom: 6px;
@@ -180,7 +196,7 @@
       font-family: monospace; font-size: 1.25rem; font-weight: 800; color: #ffffff; margin: 6px 0;
     }
     .notfound-desc {
-      font-size: 0.80rem; color: #94a3b8; line-height: 1.45; margin-bottom: 14px;
+      font-size: 0.82rem; color: #94a3b8; line-height: 1.45; margin-bottom: 14px;
     }
 
     .footer-note {
@@ -225,89 +241,44 @@
   <!-- Realtime Query Status Box (Spinner) -->
   <div id="loadingBox" class="notice-card" style="display:none; background:#131e38; border:1px solid #1e293b; border-radius:12px; margin-top:10px;">
     <div class="spinner-ring"></div>
-    <div style="font-weight:700; color:#38bdf8; margin-top:10px; font-size:0.92rem;">Retrieving Asset Record...</div>
+    <div style="font-weight:700; color:#38bdf8; margin-top:10px; font-size:0.94rem;">Retrieving Complete Asset Specifications...</div>
     <div style="font-size:0.80rem; color:#94a3b8; margin-top:4px;" id="loadingTagLabel">Tag: --</div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <!-- AUTOMATIC ON-SCREEN ASSET DETAILS CARD                  -->
-  <!-- ═══════════════════════════════════════════════════════ -->
-  <div class="asset-card" id="assetCard">
-    <div class="asset-header">
-      <div>
-        <div class="asset-unit-label" id="cardUnit">PRO MIMAROPA &bull; RICTMD</div>
-        <div class="asset-title" id="cardHostname">--</div>
-      </div>
-      <span class="badge badge-success" id="cardBadge">SERVICEABLE</span>
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- EXACT EQUIPMENT DETAILS MODAL (MATCHES DASHBOARD MODAL 100%)    -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="equipment-modal-card" id="equipmentModalCard">
+    <div class="equipment-modal-header">
+      <h6 class="equipment-modal-title">Equipment Details</h6>
+      <button class="equipment-modal-close" onclick="resetScannerForNextAsset()" type="button" title="Close and scan next asset">&times;</button>
     </div>
 
-    <div class="asset-section-title">ACCOUNTABILITY &amp; INVENTORY</div>
-    <div class="asset-grid">
-      <div class="asset-field">
-        <span class="asset-label">Assigned User / Officer</span>
-        <span class="asset-value" id="cardUser">--</span>
-      </div>
-      <div class="asset-field">
-        <span class="asset-label">Division / Station</span>
-        <span class="asset-value" id="cardDivision">--</span>
-      </div>
-      <div class="asset-field">
-        <span class="asset-label">Property / PAR No.</span>
-        <span class="asset-value text-mono" id="cardProp">--</span>
-      </div>
-      <div class="asset-field">
-        <span class="asset-label">Computer Serial No.</span>
-        <span class="asset-value text-mono" id="cardSerial">--</span>
-      </div>
+    <div class="equipment-sub-header">
+      <span class="equipment-pc-name" id="modalPcName">4BORD001 — RHQ</span>
+      <span class="equipment-badge badge-active" id="modalPcBadge">ACTIVE SERVICEABLE</span>
     </div>
 
-    <div class="asset-section-title">HARDWARE &amp; SPECIFICATIONS</div>
-    <div class="asset-grid">
-      <div class="asset-field">
-        <span class="asset-label">Device Type</span>
-        <span class="asset-value" id="cardDeviceType">Desktop PC</span>
-      </div>
-      <div class="asset-field">
-        <span class="asset-label">Installed Memory (RAM)</span>
-        <span class="asset-value" id="cardRam">--</span>
-      </div>
-      <div class="asset-field asset-field-full">
-        <span class="asset-label">Processor (CPU)</span>
-        <span class="asset-value" id="cardCpu">--</span>
-      </div>
-      <div class="asset-field asset-field-full">
-        <span class="asset-label">Storage Capacity</span>
-        <span class="asset-value" id="cardStorage">--</span>
-      </div>
+    <div class="equipment-table-container">
+      <table class="equipment-table">
+        <tbody id="modalTableBody">
+          <!-- Populated dynamically with all spreadsheet columns -->
+        </tbody>
+      </table>
     </div>
 
-    <div class="asset-section-title">SOFTWARE &amp; COMPLIANCE</div>
-    <div class="asset-grid">
-      <div class="asset-field">
-        <span class="asset-label">Operating System</span>
-        <span class="asset-value" id="cardOs">--</span>
-      </div>
-      <div class="asset-field">
-        <span class="asset-label">OS License Status</span>
-        <span class="asset-value" id="cardOsLic">--</span>
-      </div>
-      <div class="asset-field">
-        <span class="asset-label">Office Productivity</span>
-        <span class="asset-value" id="cardOffice">--</span>
-      </div>
-      <div class="asset-field">
-        <span class="asset-label">Estimated PC Age</span>
-        <span class="asset-value" id="cardAge">--</span>
-      </div>
-    </div>
-
-    <div class="action-btns" style="margin-top:14px;">
-      <button class="btn btn-primary" onclick="resetScannerForNextAsset()" type="button" style="flex:2;">
+    <div class="equipment-modal-footer">
+      <button class="btn btn-primary" onclick="resetScannerForNextAsset()" type="button">
         Scan Next Asset
       </button>
-      <button class="btn btn-secondary" onclick="copyAssetDetails()" type="button" id="btnCopyDetails" style="flex:1;">
-        Copy Specs
-      </button>
+      <div style="display:flex; gap:6px;">
+        <button class="btn btn-outline-dark" onclick="copyAssetDetails()" type="button" id="btnCopyDetails">
+          Copy Specs
+        </button>
+        <button class="btn btn-secondary" onclick="resetScannerForNextAsset()" type="button">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 
@@ -318,8 +289,8 @@
     <div class="notfound-desc">
       This property tag was scanned successfully, but does not match any enrolled desktop or laptop in the active or unserviceable inventory database.
     </div>
-    <div class="action-btns">
-      <button class="btn btn-primary" onclick="resetScannerForNextAsset()" type="button">
+    <div class="action-btns" style="margin:0 auto; max-width:280px;">
+      <button class="btn btn-primary" onclick="resetScannerForNextAsset()" type="button" style="width:100%;">
         Scan Another Tag
       </button>
     </div>
@@ -327,10 +298,10 @@
 
   <!-- Camera Controls (Active only while scanning) -->
   <div class="action-btns" id="actionControls">
-    <button class="btn btn-secondary" id="btnSwitchCamera" onclick="switchCamera()" type="button">
+    <button class="btn btn-dark-secondary" id="btnSwitchCamera" onclick="switchCamera()" type="button" style="flex:1;">
       Flip Camera
     </button>
-    <button class="btn btn-secondary" id="btnManualSearch" onclick="promptManualSearch()" type="button">
+    <button class="btn btn-dark-secondary" id="btnManualSearch" onclick="promptManualSearch()" type="button" style="flex:1;">
       Manual Search
     </button>
   </div>
@@ -354,7 +325,7 @@
     var activeAssetRecord = null;
     var searchTimeoutHandle = null;
 
-    // Audio confirmation beep using Web Audio API (Clean single confirmation tone)
+    // Audio confirmation beep using Web Audio API
     var audioCtx = null;
     function playBeep() {
       try {
@@ -383,7 +354,6 @@
 
       Html5Qrcode.getCameras().then(function(cameras) {
         if (cameras && cameras.length) {
-          // Filter out printer scanners (Brother, Canon, Epson)
           var filtered = cameras.filter(function(c) {
             var lbl = (c.label || '').toLowerCase();
             return lbl.indexOf('brother') === -1 && 
@@ -394,7 +364,6 @@
           });
           availableCameras = filtered.length > 0 ? filtered : cameras;
 
-          // Select back/rear camera on mobile phones, otherwise default webcam
           var chosenIndex = 0;
           for (var i = 0; i < availableCameras.length; i++) {
             var l = (availableCameras[i].label || '').toLowerCase();
@@ -532,14 +501,14 @@
       // 3. Switch UI from camera to Loading Status
       document.getElementById('reader-container').style.display = 'none';
       document.getElementById('actionControls').style.display = 'none';
-      document.getElementById('assetCard').style.display = 'none';
+      document.getElementById('equipmentModalCard').style.display = 'none';
       document.getElementById('notFoundCard').style.display = 'none';
 
       var loadingBox = document.getElementById('loadingBox');
       loadingBox.style.display = 'block';
       document.getElementById('loadingTagLabel').textContent = 'Asset Tag: ' + cleanCode;
 
-      // 4. AUTOMATIC ASSET LOOKUP (NO REDIRECT, NO DASHBOARD CLICK NEEDED)
+      // 4. AUTOMATIC ASSET LOOKUP
       lookupAssetRecord(cleanCode);
     }
 
@@ -551,14 +520,13 @@
     function lookupAssetRecord(cleanCode) {
       var foundLocally = false;
 
-      // Listen for response from dashboard window
       var messageListener = function(event) {
         if (event.data && event.data.type === 'ASSET_RECORD_FOUND' && event.data.code === cleanCode) {
           window.removeEventListener('message', messageListener);
           if (searchTimeoutHandle) clearTimeout(searchTimeoutHandle);
           
           if (event.data.record) {
-            renderAssetCard(event.data.record, event.data.recordType || 'active');
+            renderFullEquipmentModal(event.data.record, event.data.recordType || 'active');
           } else {
             renderNotFound(cleanCode);
           }
@@ -567,14 +535,12 @@
       };
       window.addEventListener('message', messageListener);
 
-      // Attempt 1: Inquire with window.opener if dashboard is open in background
       try {
         if (window.opener && !window.opener.closed) {
           window.opener.postMessage({ type: 'LOOKUP_ASSET', code: cleanCode, text: cleanCode }, '*');
         }
       } catch(e) {}
 
-      // Attempt 2: If no instant answer from opener within 350ms, query Apps Script API directly
       searchTimeoutHandle = setTimeout(function() {
         if (!foundLocally) {
           queryAppsScriptApi(cleanCode);
@@ -583,14 +549,13 @@
     }
 
     function queryAppsScriptApi(cleanCode) {
-      // Ensure API endpoint uses /exec
       var apiEndpoint = returnUrl.replace(/\/dev(\?|$)/, '/exec$1');
       var callbackName = 'onAssetQuery_' + Math.floor(Math.random() * 1000000);
 
       window[callbackName] = function(response) {
         cleanup();
         if (response && response.success && response.record) {
-          renderAssetCard(response.record, response.isUnserviceable ? 'unserv' : 'active');
+          renderFullEquipmentModal(response.record, response.isUnserviceable ? 'unserv' : 'active');
         } else {
           renderNotFound(cleanCode);
         }
@@ -603,7 +568,6 @@
 
       scriptTag.onerror = function() {
         cleanup();
-        // If API fails (e.g., offline or unauthenticated /dev URL), fallback to basic card
         renderFallbackCard(cleanCode);
       };
 
@@ -617,53 +581,104 @@
     }
 
     // ═════════════════════════════════════════════════════════════
-    // RENDER OFFICIAL ASSET SPECIFICATIONS DIRECTLY ON SCREEN
+    // RENDER EXACT "EQUIPMENT DETAILS" MODAL TABLE (ALL COLUMNS)
     // ═════════════════════════════════════════════════════════════
-    function renderAssetCard(record, recordType) {
+    function renderFullEquipmentModal(record, recordType) {
       activeAssetRecord = record;
       document.getElementById('loadingBox').style.display = 'none';
 
-      var card = document.getElementById('assetCard');
-      card.style.display = 'block';
+      var modal = document.getElementById('equipmentModalCard');
+      modal.style.display = 'block';
 
-      var hostname = getRecordVal(record, ['Endpoint Name', 'Hostname', 'Computer Name']) || lastScannedCode;
-      var unit = getRecordVal(record, ['Unit', 'PRO/Unit']) || 'PRO MIMAROPA';
-      var div = getRecordVal(record, ['Division/Station', 'Division', 'Station']) || 'General Station';
-      var user = getRecordVal(record, ['Assigned user', 'End User', 'Accountable Officer', 'User']) || 'Unassigned';
-      var prop = getRecordVal(record, ['Property Acknowledgement Receipt (PA) - Property #', 'Property #', 'Property No.', 'PAR #']) || 'N/A';
-      var serial = getRecordVal(record, ['Property Acknowledgement Receipt (PA) - Computer Serial #', 'System Serial Number', 'Serial Number', 'Serial']) || 'N/A';
-      var devType = getRecordVal(record, ['Device Type', 'Computer Type']) || 'Desktop PC';
-      var cpu = getRecordVal(record, ['CPU - Type', 'Processor', 'CPU']) || 'Not Specified';
-      var ram = getRecordVal(record, ['RAM - Total (GB)', 'Memory (RAM)', 'RAM']) || 'Not Specified';
-      var storage = getRecordVal(record, ['STORAGE - Total Capacity', 'Storage', 'Hard Disk']) || 'Not Specified';
-      var os = getRecordVal(record, ['OPERATING SYSTEM - Product Name', 'OS', 'Operating System']) || 'Windows';
-      var osLic = getRecordVal(record, ['OPERATING SYSTEM - Licensed? (Y/N)', 'OS License']) || 'Unspecified';
-      var office = getRecordVal(record, ['Office Productivity Software - Product Name', 'Office']) || 'None';
-      var age = getRecordVal(record, ['Estimated PC Age (Years)', 'PC Age']) || 'N/A';
+      // 1. Sub-Header: Endpoint Name — Unit
+      var host = getRecordVal(record, ['Endpoint Name', 'Hostname', 'Computer Name']) || lastScannedCode;
+      var unit = getRecordVal(record, ['Unit', 'PRO/Unit']) || '';
+      document.getElementById('modalPcName').textContent = host + (unit ? (' — ' + unit) : '');
 
-      document.getElementById('cardHostname').textContent = hostname;
-      document.getElementById('cardUnit').textContent = unit;
-      document.getElementById('cardDivision').textContent = div;
-      document.getElementById('cardUser').textContent = user;
-      document.getElementById('cardProp').textContent = prop;
-      document.getElementById('cardSerial').textContent = serial;
-      document.getElementById('cardDeviceType').textContent = devType;
-      document.getElementById('cardCpu').textContent = cpu;
-      document.getElementById('cardRam').textContent = ram.indexOf('GB') > -1 ? ram : (ram + ' GB');
-      document.getElementById('cardStorage').textContent = storage;
-      document.getElementById('cardOs').textContent = os;
-      document.getElementById('cardOsLic').textContent = osLic;
-      document.getElementById('cardOffice').textContent = office;
-      document.getElementById('cardAge').textContent = age !== 'N/A' ? (age + ' Years') : 'N/A';
-
-      var badge = document.getElementById('cardBadge');
-      if (recordType === 'unserv' || (record['_Status'] && record['_Status'].indexOf('Unserv') > -1)) {
-        badge.className = 'badge badge-danger';
-        badge.textContent = 'UNSERVICEABLE';
+      // 2. Status Badge
+      var badgeEl = document.getElementById('modalPcBadge');
+      var isUnserv = (recordType === 'unserv' || (record['_Status'] && record['_Status'].indexOf('Unserv') > -1));
+      if (isUnserv) {
+        var remarks = (record['Auto Remarks'] || '').toUpperCase();
+        if (remarks.indexOf('UNREPAIRABLE') > -1) {
+          badgeEl.className = 'equipment-badge badge-unserv';
+          badgeEl.textContent = 'UNREPAIRABLE';
+        } else if (remarks.indexOf('BER') > -1) {
+          badgeEl.className = 'equipment-badge badge-ber';
+          badgeEl.textContent = 'BER (BEYOND ECONOMICAL REPAIR)';
+        } else {
+          badgeEl.className = 'equipment-badge badge-unserv';
+          badgeEl.textContent = 'UNSERVICEABLE';
+        }
       } else {
-        badge.className = 'badge badge-success';
-        badge.textContent = 'ACTIVE SERVICEABLE';
+        badgeEl.className = 'equipment-badge badge-active';
+        badgeEl.textContent = 'ACTIVE SERVICEABLE';
       }
+
+      // 3. Complete Table: Render all spreadsheet columns exactly like Dashboard Modal
+      var tbody = document.getElementById('modalTableBody');
+      var rowsHtml = '';
+
+      // Priority list of common headers to show first in logical sequence
+      var priorityKeys = [
+        'Endpoint Name', 'Device Type', 'Unit', 'Division/Station', 'Section',
+        'Assigned user', 'Date Added', 'Last Update', 'Auto Remarks',
+        'OPERATING SYSTEM - Product Name', 'OPERATING SYSTEM - Licensed? (Y/N)',
+        'CPU - Type', 'Estimated PC Age (Years)', 'Installed XDR - Trendmicro',
+        'Installed XDR - Sophos', 'Installed XDR - Cybereason',
+        'Property Acknowledgement Receipt (PA) - Property #',
+        'Property Acknowledgement Receipt (PA) - PAR #',
+        'Property Acknowledgement Receipt (PA) - Computer Serial #',
+        'RAM - Total (GB)', 'STORAGE - Total Capacity',
+        'Office Productivity Software - Product Name',
+        'Office Productivity Software - Licensed? (Y/N)',
+        'IP ADDRESS', 'MAC ADDRESS - Ethernet adapter', 'MAC ADDRESS - Wireless LAN adapter',
+        'System Manufacturer', 'System Model'
+      ];
+
+      var renderedKeys = {};
+
+      // Render priority columns first
+      priorityKeys.forEach(function(key) {
+        if (record[key] !== undefined) {
+          renderedKeys[key] = true;
+          var val = record[key];
+          if (val === undefined || val === null || String(val).trim() === '') {
+            val = '<span style="color:#adb5bd; font-style:italic;">None</span>';
+          }
+          rowsHtml += '<tr>' +
+                        '<th>' + escapeHtml(key) + '</th>' +
+                        '<td>' + (String(val).indexOf('<span') === 0 ? val : escapeHtml(String(val))) + '</td>' +
+                      '</tr>';
+        }
+      });
+
+      // Render remaining columns from the spreadsheet row
+      Object.keys(record).forEach(function(key) {
+        if (key.indexOf('_') === 0) return; // Skip internal keys (_Status, _Source_Sheet, etc.)
+        if (renderedKeys[key]) return; // Already rendered
+
+        var val = record[key];
+        if (val === undefined || val === null || String(val).trim() === '') {
+          val = '<span style="color:#adb5bd; font-style:italic;">None</span>';
+        }
+        rowsHtml += '<tr>' +
+                      '<th>' + escapeHtml(key) + '</th>' +
+                      '<td>' + (String(val).indexOf('<span') === 0 ? val : escapeHtml(String(val))) + '</td>' +
+                    '</tr>';
+      });
+
+      tbody.innerHTML = rowsHtml;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
 
     function renderNotFound(code) {
@@ -674,8 +689,7 @@
     }
 
     function renderFallbackCard(code) {
-      // Basic info card when offline or when API call fails
-      renderAssetCard({
+      renderFullEquipmentModal({
         'Endpoint Name': code,
         'Unit': 'PRO MIMAROPA',
         'Division/Station': 'Live Scanned Endpoint',
@@ -699,7 +713,7 @@
     function resetScannerForNextAsset() {
       activeAssetRecord = null;
       lastScannedCode = '';
-      document.getElementById('assetCard').style.display = 'none';
+      document.getElementById('equipmentModalCard').style.display = 'none';
       document.getElementById('notFoundCard').style.display = 'none';
       document.getElementById('loadingBox').style.display = 'none';
       document.getElementById('reader-container').style.display = 'flex';
@@ -710,17 +724,17 @@
 
     function copyAssetDetails() {
       if (!activeAssetRecord && !lastScannedCode) return;
-      var text = 'PRO MIMAROPA RICTMD IT ASSET\n' +
-                 'Hostname: ' + document.getElementById('cardHostname').textContent + '\n' +
-                 'Status: ' + document.getElementById('cardBadge').textContent + '\n' +
-                 'User: ' + document.getElementById('cardUser').textContent + '\n' +
-                 'Unit: ' + document.getElementById('cardUnit').textContent + ' / ' + document.getElementById('cardDivision').textContent + '\n' +
-                 'Property No.: ' + document.getElementById('cardProp').textContent + '\n' +
-                 'Serial No.: ' + document.getElementById('cardSerial').textContent + '\n' +
-                 'CPU: ' + document.getElementById('cardCpu').textContent + '\n' +
-                 'RAM: ' + document.getElementById('cardRam').textContent + '\n' +
-                 'Storage: ' + document.getElementById('cardStorage').textContent + '\n' +
-                 'OS: ' + document.getElementById('cardOs').textContent;
+      var text = 'PRO MIMAROPA RICTMD EQUIPMENT DETAILS\n' +
+                 document.getElementById('modalPcName').textContent + ' [' + document.getElementById('modalPcBadge').textContent + ']\n\n';
+
+      var rows = document.querySelectorAll('#modalTableBody tr');
+      rows.forEach(function(row) {
+        var th = row.querySelector('th');
+        var td = row.querySelector('td');
+        if (th && td) {
+          text += th.textContent.trim() + ': ' + td.textContent.trim() + '\n';
+        }
+      });
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(function() {
@@ -729,7 +743,7 @@
           setTimeout(function() { btn.textContent = 'Copy Specs'; }, 1500);
         });
       } else {
-        alert(text);
+        alert('Details copied to clipboard.');
       }
     }
 
